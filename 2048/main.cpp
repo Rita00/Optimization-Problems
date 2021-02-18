@@ -8,6 +8,7 @@ void getInput(string input) {
 
 }
 
+
 int boardAux[7][7] = {
         {2, 4, 4,  8, 8, 4, 4},
         {0, 0, 0,  2, 2, 4, 2},
