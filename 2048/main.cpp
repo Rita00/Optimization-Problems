@@ -52,24 +52,43 @@ Game* getInput(){
     return game;
 }
 
-void res(int **board, int size) {
-    char allMoves[] = {'A', 'W', 'S', 'D'}, move = allMoves[rand() % 4];
-    for (int i = 0; i < size; i++) {
-        if (move == 'A' || move == 'W') {
-            for (int j = size - 1; j <= 0; j++) {
-                int current = board[i][j], bef = board[i][j - 1];
-                if (bef && current && (bef == current)) {
-                    board[i][size - 2] = board[i][size - 1] + board[i][size - 2];
-                    board[i][size - 1] = 0;
+void res(int **board, int size, int maxMoves) {
+    char allMoves[] = {'A', 'W', 'S', 'D'}, move;
+    int current, bef;
+    for (int k = 0; k < maxMoves; k++) {
+        move = allMoves[rand() % 4];
+        for (int i = 0; i < size; i++) {
+            if (move == 'A' || move == 'W') {
+                for (int j = size - 1; j <= 0; j--) {
+                    if (move == 'A')
+                        current = board[i][j], bef = board[i][j - 1];
+                    else
+                        current = board[i][j], bef = board[i - 1][j];
+
+                    if (bef && current && (bef == current)) {
+                        board[i][j - 1] = bef + current;
+                        board[i][j] = 0;
+                        if (j > 0)
+                            j--;
+                    }
+                }
+            } else {
+                for (int j = 0; j < size; j++) {
+                    if (move == 'S')
+                        current = board[i][j], bef = board[i][j + 1];
+                    else
+                        current = board[i][j], bef = board[i + 1][j];
+                    if (bef && current && (bef == current)) {
+                        board[i][j - 1] = bef + current;
+                        board[i][j] = 0;
+                        if (j < size)
+                            j++;
+                    }
                 }
             }
-        } else {
-            for (int j = 0; j < size; j++) {
-
-            }
         }
-
     }
+
 }
 
 int main() {
