@@ -1,6 +1,6 @@
 #include <iostream>
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 using namespace std;
 
@@ -44,7 +44,15 @@ void res(int **board, int size, int maxMoves) {
             }
         }
     }
+}
 
+void printMatrix(int **board, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            printf("%d ", board[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 int main() {
