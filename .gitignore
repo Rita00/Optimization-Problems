@@ -33,16 +33,11 @@
 
 #other
 *.DS_Store
-
-
 *.pbxproj
 *.xcworkspacedata
 *.plist
 *.xcuserstate
 *main
-*.vscode/settings.json
+*.vscode/*
 *.xcscheme
 *.xcbkptlist
-*.json
-*.json
-*.json
