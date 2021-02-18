@@ -1,7 +1,10 @@
+#include <iostream>
+#include <string>
+
 class MyClass {       // The class
   public:             // Access specifier
     int myNum;        // Attribute (int variable)
-    string myString;  // Attribute (string variable)
+    std::string myString;  // Attribute (string variable)
 };
 
 int main() {
@@ -12,7 +15,7 @@ int main() {
   myObj.myString = "Some text";
 
   // Print attribute values
-  cout << myObj.myNum << "\n";
-  cout << myObj.myString;
+  std::cout << myObj.myNum << "\n";
+  std::cout << myObj.myString;
   return 0;
 }
