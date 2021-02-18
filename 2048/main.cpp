@@ -31,6 +31,15 @@ int* split(string line, int size){
 }
 */
 
+void printMatrix(int** matrix,int dim){
+    for(int r=0; r<dim; r++){
+        for(int c=0; c<dim; c++){
+            printf("%i\t",matrix[r][c]);
+        }
+        printf("\n");
+    }
+}
+
 Game* getInput(){
     string input;
 	//get boards
@@ -97,7 +106,8 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 	//input
-	getInput();
+	Game* game = getInput();
+    printMatrix(game[0].board,game[0].dim);
     cout << input << "\n";
     return 0;
 }
