@@ -39,4 +39,10 @@
 *.xcworkspacedata
 *.plist
 *.xcuserstate
-2048/main
+*main
+*.vscode/settings.json
+*.xcscheme
+*.xcbkptlist
+*.json
+*.json
+*.json

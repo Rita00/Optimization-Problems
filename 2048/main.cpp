@@ -1,11 +1,55 @@
+#include <ctype.h>
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
 
 using namespace std;
 
-void getInput(string input){
+typedef struct Game{
+    int dim;
+    int moves;
+    int** board;
+}Game;
 
+/*
+int* split(string line, int size){
+    int array[size];
+    int i = 0;
+    size_t pos = 0;
+    string token;
+    while ((pos = line.find(" ")) != string::npos) {
+        //substring até pos
+        token = line.substr(0, pos);
+        array[i] = stoi(token,nullptr,10);
+        //apaga string até pos+1
+        line.erase(0, pos+1);
+        i++;
+    }
+    return array;
+}
+*/
+
+Game* getInput(){
+    string input;
+	//get boards
+    int boards;
+	cin >> boards;
+    Game* game = (Game*) malloc(boards*sizeof(Game));
+    //get dim and moves
+	for(int i=0; i<boards; i++){
+        cin >> game[i].dim >> game[i].moves;
+        //get board
+        game[i].board = (int**) malloc(game[i].dim*sizeof(int*));
+        for(int r=0; r<game[i].dim; r++){
+            for(int c=0; c<game[i].dim; c++){
+                *((game[i].board)+r) = (int*) malloc(game[i].dim*sizeof(int));
+                cin >> *(*(game[i].board+r)+c);
+            }
+        }
+	}
+    return game;
 }
 
 void res(int **board, int size) {
@@ -34,9 +78,8 @@ int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 	//input
-	cin >> input;
+	getInput();
     cout << input << "\n";
     return 0;
 }
- 
  
