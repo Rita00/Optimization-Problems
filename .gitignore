@@ -35,3 +35,7 @@
 *.DS_Store
 
 
+*.pbxproj
+*.xcworkspacedata
+*.plist
+*.xcuserstate
