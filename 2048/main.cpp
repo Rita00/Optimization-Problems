@@ -12,11 +12,11 @@ void res(int **board, int size) {
     char allMoves[] = {'A', 'W', 'S', 'D'}, move = allMoves[rand() % 4];
     for (int i = 0; i < size; i++) {
         if (move == 'A' || move == 'W') {
-            for (int j = size - 1; j <= 0; j++) {
+            for (int j = size - 1; j <= 0; j--) {
                 int current = board[i][j], bef = board[i][j - 1];
                 if (bef && current && (bef == current)) {
-                    board[i][size - 2] = board[i][size - 1] + board[i][size - 2];
-                    board[i][size - 1] = 0;
+                    board[i][j - 1] = bef + current;
+                    board[i][j] = 0;
                 }
             }
         } else {
