@@ -53,8 +53,8 @@ Game* getInput(){
         game[i].board = (int**) malloc(game[i].dim*sizeof(int*));
         for(int r=0; r<game[i].dim; r++){
             for(int c=0; c<game[i].dim; c++){
-                *((game[i].board)+r) = (int*) malloc(game[i].dim*sizeof(int));
-                cin >> *(*(game[i].board+r)+c);
+                game[i].board[r] = (int*) malloc(game[i].dim*sizeof(int));
+                cin >> game[i].board[r][c];
             }
         }
 	}
