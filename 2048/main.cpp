@@ -10,7 +10,7 @@ void getInput(string input) {
 
 
 int boardAux[7][7] = {
-        {2, 4, 4,  8, 8, 4, 4},
+        {0, 4, 4,  8, 8, 4, 4},
         {0, 0, 0,  2, 2, 4, 2},
         {8, 0, 0,  2, 2, 4, 8},
         {0, 0, 0,  0, 0, 0, 0},
@@ -24,10 +24,7 @@ inline void solveArray(int *array, int size) {
     for (int i = 0; i < size - 1; i++) {
         current = array[i];
         after = array[i + 1];
-        if (!current) {
-            array[i] = after;
-            array[i + 1] = 0;
-        } else if (after) {
+        if (after) {
             if (after == current) {
                 //Operações bitwise são mais rápidas
                 array[i] = after << 1;
@@ -38,10 +35,18 @@ inline void solveArray(int *array, int size) {
             break;
         }
     }
+    int aux = 0;
+    for (int j = 0; j < size; j++) {
+        if (array[j])
+            array[aux++] = array[j];
+    }
+    for (int j = aux; j < size; j++) {
+        array[j] = 0;
+    }
 }
 
 inline void caseUp(int **board, int size) {
-    int current, after, aux;
+    int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
@@ -59,87 +64,57 @@ inline void caseUp(int **board, int size) {
 }
 
 inline void caseDown(int **board, int size) {
-    int current, bef, aux;
+    int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
-        aux = size - 1;
+        aux = 0;
         fill(arrayAux, arrayAux + size, 0);
 
         for (int j = size - 1; j >= 0; j--) {
             current = boardAux[j][i];
-            if (j - 1 < 0) {
-                bef = 0;
-            } else {
-                bef = boardAux[j - 1][i];
-            }
-            if (current) {
-                if (bef == current) {
-                    //Operações bitwise são mais rápidas
-                    arrayAux[aux--] = bef << 1;
-                    j--;
-                } else {
-                    arrayAux[aux--] = current;
-                }
-            }
+            if (current)
+                arrayAux[aux++] = current;
         }
+        solveArray(arrayAux, size);
         for (int j = size - 1; j >= 0; j--) {
-            boardAux[j][i] = arrayAux[j];
+            boardAux[j][i] = arrayAux[size - j - 1];
         }
     }
 }
 
-
 inline void caseLeft(int **board, int size) {
-    int current, after, aux;
+    int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
         fill(arrayAux, arrayAux + size, 0);
         for (int j = 0; j < size; j++) {
             current = boardAux[i][j];
-            if (j + 1 == size) {
-                after = 0;
-            } else {
-                after = boardAux[i][j + 1];
-            }
             if (current) {
-                if (after == current) {
-                    //Operações bitwise são mais rápidas
-                    arrayAux[aux++] = after << 1;
-                    j++;
-                } else {
-                    arrayAux[aux++] = current;
-                }
+                arrayAux[aux++] = current;
             }
         }
+        solveArray(arrayAux, size);
         memcpy(boardAux[i], arrayAux, sizeof(int) * size);
     }
 }
 
 inline void caseRight(int **board, int size) {
-    int current, before, aux;
+    int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
-        aux = size - 1;
+        aux = 0;
         fill(arrayAux, arrayAux + size, 0);
         for (int j = size - 1; j >= 0; j--) {
             current = boardAux[i][j];
-            if (j - 1 < 0) {
-                before = 0;
-            } else {
-                before = boardAux[i][j - 1];
-            }
             if (current) {
-                if (before == current) {
-                    //Operações bitwise são mais rápidas
-                    arrayAux[aux--] = before << 1;
-                    j--;
-                } else {
-                    arrayAux[aux--] = current;
-                }
+                arrayAux[aux++] = current;
             }
         }
-        memcpy(boardAux[i], arrayAux, sizeof(int) * size);
+        solveArray(arrayAux, size);
+        for (int j = size - 1; j >= 0; j--) {
+            boardAux[i][j] = arrayAux[size - j - 1];
+        }
     }
 }
 
@@ -147,7 +122,7 @@ void res(int **board, int size, int maxMoves) {
     char allMoves[] = {'A', 'W', 'S', 'D'}, move;
 
     for (int k = 0; k < maxMoves; k++) {
-        move = 'W';
+        move = 'D';
         //move = allMoves[rand() % 4];
         if (move == 'A') {
             caseLeft(board, 7);
