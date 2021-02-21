@@ -37,7 +37,11 @@
 *.xcworkspacedata
 *.plist
 *.xcuserstate
-*main
-*.vscode/*
 *.xcscheme
 *.xcbkptlist
+*.vscode/*
+*.pdf
+2048/main
+
+
+*.json

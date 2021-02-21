@@ -1,35 +1,90 @@
-#include <ctype.h>
+/**
+ * @author Dylan Gonçalves Perdigão - 2018233092
+ * @author Ana Rita Rodrigues -  xxxxxxxxx
+ */
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include <cstdio>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-typedef struct Game{
-    int dim;
-    int moves;
-    int** board;
-}Game;
+typedef struct Board{
+    int size;
+    int max_moves;
+    vector<int> vector;
+}Board;
 
-/*
-int* split(string line, int size){
-    int array[size];
-    int i = 0;
-    size_t pos = 0;
-    string token;
-    while ((pos = line.find(" ")) != string::npos) {
-        //substring até pos
-        token = line.substr(0, pos);
-        array[i] = stoi(token,nullptr,10);
-        //apaga string até pos+1
-        line.erase(0, pos+1);
-        i++;
+/**
+ * Permite obter o vetor que representa o tabuleiro do stdin
+ * @param size numero de linhas/colunas do tabuleiro
+ * @return vetor com o tabuleiro
+ */
+vector<int> getVector(int size) {
+    vector<int> vect;
+    int aux;
+    for(int i=0; i<pow(size,2);i++){
+        cin>>aux;
+        vect.push_back(aux);
     }
-    return array;
+    return vect;
 }
-*/
+
+/**
+ * Permite obter os tabuleiros com os respetivos tamanhos e jogadas maximas do stdin
+ * @param n numero de tabuleiros
+ * @return vetor com os tabuleiros
+ */
+vector<Board> getInput(int n) {
+    vector<Board> board;
+    Board aux;
+    int size,moves;
+    for(int i=0; i<n; i++){
+        cin>>size>>moves;
+        aux.size=size;
+        aux.max_moves=moves;
+        aux.vector=getVector(size);
+        board.push_back(aux);
+    }
+    return board;
+}
+
+
+int boardAux[7][7] = {
+        {0, 4, 4,  8, 8, 4, 4},
+        {0, 0, 0,  2, 2, 4, 2},
+        {8, 0, 0,  2, 2, 4, 8},
+        {0, 0, 0,  0, 0, 0, 0},
+        {2, 2, 2,  2, 2, 2, 2},
+        {4, 4, 0,  4, 0, 0, 8},
+        {8, 8, 16, 0, 0, 4, 0}
+};
+
+inline void solveArray(int *array, int size) {
+    int current, after;
+    for (int i = 0; i < size - 1; i++) {
+        current = array[i];
+        after = array[i + 1];
+        if (after) {
+            if (after == current) {
+                //Operações bitwise são mais rápidas
+                array[i] = after << 1;
+                array[i + 1] = 0;
+            }
+        } else {
+            // Evita iterações desnecessárias assim que encontra o primeiro zero no array
+            break;
+        }
+    }
+    int aux = 0;
+    for (int j = 0; j < size; j++) {
+        if (array[j])
+            array[aux++] = array[j];
+    }
+    for (int j = aux; j < size; j++) {
+        array[j] = 0;
+    }
+}
 
 void printMatrix(int** matrix,int dim){
     for(int r=0; r<dim; r++){
@@ -38,27 +93,6 @@ void printMatrix(int** matrix,int dim){
         }
         printf("\n");
     }
-}
-
-Game* getInput(){
-    string input;
-	//get boards
-    int boards;
-	cin >> boards;
-    Game* game = (Game*) malloc(boards*sizeof(Game));
-    //get dim and moves
-	for(int i=0; i<boards; i++){
-        cin >> game[i].dim >> game[i].moves;
-        //get board
-        game[i].board = (int**) malloc(game[i].dim*sizeof(int*));
-        for(int r=0; r<game[i].dim; r++){
-            for(int c=0; c<game[i].dim; c++){
-                game[i].board[r] = (int*) malloc(game[i].dim*sizeof(int));
-                cin >> game[i].board[r][c];
-            }
-        }
-	}
-    return game;
 }
 
 void res(int **board, int size, int maxMoves) {
@@ -101,14 +135,25 @@ void res(int **board, int size, int maxMoves) {
 }
 
 int main() {
-	string input;
-	//faster with this lines
+    //faster with this lines
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-	//input
-	Game* game = getInput();
-    printMatrix(game[0].board,game[0].dim);
-    cout << input << "\n";
+    //get number of boards
+    int n;
+    cin>>n;
+    //get all boards
+    vector<Board> board = getInput(n);
+
+    printMatrix(NULL, 7);
+    res(NULL, 7, 1);
+    printf("---------------------------\n");
+    printMatrix(NULL, 7);
+    //string input;
+
+    //input
+    //cin >> input;
+    //cout << input << "\n";
     return 0;
 }
+ 
  
