@@ -50,7 +50,7 @@ vector<Board> getInput(int n) {
 }
 
 
-int boardAux[7][7] = {
+/*int boardAux[7][7] = {
         {0, 4, 4,  8, 8, 4, 4},
         {0, 0, 0,  2, 2, 4, 2},
         {8, 0, 0,  2, 2, 4, 8},
@@ -58,7 +58,7 @@ int boardAux[7][7] = {
         {2, 2, 2,  2, 2, 2, 2},
         {4, 4, 0,  4, 0, 0, 8},
         {8, 8, 16, 0, 0, 4, 0}
-};
+};*/
 
 void printMatrix(int **matrix, int dim) {
     for (int r = 0; r < dim; r++) {
@@ -95,25 +95,25 @@ inline void solveArray(int *array, int size) {
     }
 }
 
-inline void caseUp(int **board, int size) {
+inline void caseUp(vector<int> &board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
         fill(arrayAux, arrayAux + size, 0);
         for (int j = 0; j < size; j++) {
-            current = boardAux[j][i];
+            current = board[j * size + i];
             if (current)
                 arrayAux[aux++] = current;
         }
         solveArray(arrayAux, size);
         for (int j = size - 1; j >= 0; j--) {
-            boardAux[j][i] = arrayAux[j];
+            board[j * size + i] = arrayAux[j];
         }
     }
 }
 
-inline void caseDown(int **board, int size) {
+inline void caseDown(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
@@ -121,54 +121,56 @@ inline void caseDown(int **board, int size) {
         fill(arrayAux, arrayAux + size, 0);
 
         for (int j = size - 1; j >= 0; j--) {
-            current = boardAux[j][i];
+            current = board[j * size + i];
             if (current)
                 arrayAux[aux++] = current;
         }
         solveArray(arrayAux, size);
         for (int j = size - 1; j >= 0; j--) {
-            boardAux[j][i] = arrayAux[size - j - 1];
+            board[j * size + i] = arrayAux[size - j - 1];
         }
     }
 }
 
-inline void caseLeft(int **board, int size) {
+inline void caseLeft(vector<int> &board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
         fill(arrayAux, arrayAux + size, 0);
         for (int j = 0; j < size; j++) {
-            current = boardAux[i][j];
+            current = board[i * size + j];
             if (current) {
                 arrayAux[aux++] = current;
             }
         }
         solveArray(arrayAux, size);
-        memcpy(boardAux[i], arrayAux, sizeof(int) * size);
+        for (int j = 0; j < size; j++) {
+            board[j * size + i] = arrayAux[j];
+        }
     }
 }
 
-inline void caseRight(int **board, int size) {
+inline void caseRight(vector<int> &board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
         fill(arrayAux, arrayAux + size, 0);
         for (int j = size - 1; j >= 0; j--) {
-            current = boardAux[i][j];
+            current = board[i * size + j];
             if (current) {
                 arrayAux[aux++] = current;
             }
         }
         solveArray(arrayAux, size);
         for (int j = size - 1; j >= 0; j--) {
-            boardAux[i][j] = arrayAux[size - j - 1];
+            board[i * size + j] = arrayAux[size - j - 1];
         }
     }
 }
 
-void res(int **board, int size, int maxMoves) {
+void res(vector<int> &board, int size, int maxMoves) {
     char allMoves[] = {'A', 'W', 'S', 'D'}, move;
 
     for (int k = 0; k < maxMoves; k++) {
@@ -186,10 +188,10 @@ void res(int **board, int size, int maxMoves) {
     }
 }
 
-void printMatrix2(int **board, int size) {
+void printMatrix2(vector<int> board, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            printf("%d ", boardAux[i][j]);
+            printf("%d ", board[i * size + j]);
         }
         printf("\n");
     }
@@ -206,10 +208,10 @@ int main() {
     //get all boards
     vector<Board> board = getInput(n);
 
-    printMatrix(NULL, 7);
-    res(NULL, 7, 1);
+    printMatrix2(board[0].vector, board[0].size);
+    res(board[0].vector, board[0].size, board[0].max_moves);
     printf("---------------------------\n");
-    printMatrix(NULL, 7);
+    printMatrix2(board[0].vector, board[0].size);
     //string input;
 
     //input
