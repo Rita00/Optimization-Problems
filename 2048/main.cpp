@@ -200,18 +200,21 @@ void printMatrix2(vector<int> board, int size) {
 
 int main() {
     //faster with this lines
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    //ios_base::sync_with_stdio(0);
+    //cin.tie(0);
     //get number of boards
     int n;
     cin >> n;
     //get all boards
-    vector<Board> board = getInput(n);
-
-    printMatrix2(board[0].vector, board[0].size);
-    res(board[0].vector, board[0].size, board[0].max_moves);
-    printf("---------------------------\n");
-    printMatrix2(board[0].vector, board[0].size);
+    vector<Board> boards = getInput(n);
+    for (auto board : boards) {
+        cout << "=========Board===============" << endl;
+        printMatrix2(board.vector, board.size);
+        res(board.vector, board.size, board.max_moves);
+        printf("---------------------------\n");
+        printMatrix2(board.vector, board.size);
+    }
+    
     //string input;
 
     //input
