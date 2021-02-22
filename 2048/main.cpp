@@ -12,6 +12,7 @@ using namespace std;
 typedef struct Board {
     int size;
     int max_moves;
+    int used_moves;
     vector<int> vector;
 } Board;
 
@@ -191,17 +192,17 @@ void res(vector<int> &board, int size, int maxMoves) {
 void printMatrix2(vector<int> board, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            printf("%d ", board[i * size + j]);
+            cout << board[i * size + j] << " ";
         }
-        printf("\n");
+        cout << endl;
     }
 
 }
 
 int main() {
     //faster with this lines
-    //ios_base::sync_with_stdio(0);
-    //cin.tie(0);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     //get number of boards
     int n;
     cin >> n;
@@ -211,7 +212,7 @@ int main() {
         cout << "=========Board===============" << endl;
         printMatrix2(board.vector, board.size);
         res(board.vector, board.size, board.max_moves);
-        printf("---------------------------\n");
+        cout << "---------------------------" << endl;
         printMatrix2(board.vector, board.size);
     }
     
