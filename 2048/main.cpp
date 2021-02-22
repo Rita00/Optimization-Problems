@@ -3,8 +3,6 @@
  * @author Dylan Gonçalves Perdigão - 2018233092
  */
 #include <iostream>
-#include <cstdio>
-#include <cstring>
 #include <vector>
 
 using namespace std;
@@ -48,26 +46,6 @@ vector<Board> getInput(int n) {
         board.push_back(aux);
     }
     return board;
-}
-
-
-/*int boardAux[7][7] = {
-        {0, 4, 4,  8, 8, 4, 4},
-        {0, 0, 0,  2, 2, 4, 2},
-        {8, 0, 0,  2, 2, 4, 8},
-        {0, 0, 0,  0, 0, 0, 0},
-        {2, 2, 2,  2, 2, 2, 2},
-        {4, 4, 0,  4, 0, 0, 8},
-        {8, 8, 16, 0, 0, 4, 0}
-};*/
-
-void printMatrix(int **matrix, int dim) {
-    for (int r = 0; r < dim; r++) {
-        for (int c = 0; c < dim; c++) {
-            printf("%i\t", matrix[r][c]);
-        }
-        printf("\n");
-    }
 }
 
 inline void solveArray(int *array, int size) {
@@ -189,7 +167,7 @@ void res(vector<int> &board, int size, int maxMoves) {
     }
 }
 
-void printMatrix2(vector<int> board, int size) {
+void printMatrix(vector<int> board, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             cout << board[i * size + j] << " ";
@@ -201,8 +179,8 @@ void printMatrix2(vector<int> board, int size) {
 
 int main() {
     //faster with this lines
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
     //get number of boards
     int n;
     cin >> n;
@@ -210,17 +188,11 @@ int main() {
     vector<Board> boards = getInput(n);
     for (auto board : boards) {
         cout << "=========Board===============" << endl;
-        printMatrix2(board.vector, board.size);
+        printMatrix(board.vector, board.size);
         res(board.vector, board.size, board.max_moves);
         cout << "---------------------------" << endl;
-        printMatrix2(board.vector, board.size);
+        printMatrix(board.vector, board.size);
     }
-    
-    //string input;
-
-    //input
-    //cin >> input;
-    //cout << input << "\n";
     return 0;
 }
  
