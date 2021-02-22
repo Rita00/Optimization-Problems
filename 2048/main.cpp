@@ -1,6 +1,6 @@
 /**
+ * @author Ana Rita Rodrigues -  2018284515
  * @author Dylan Gonçalves Perdigão - 2018233092
- * @author Ana Rita Rodrigues -  xxxxxxxxx
  */
 #include <iostream>
 #include <cstdio>

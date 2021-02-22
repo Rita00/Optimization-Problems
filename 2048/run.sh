@@ -1,6 +1,6 @@
 
 # @author Dylan Perdigão       -   2018233092
-# @author Ana Rita Rodrigues   -
+# @author Ana Rita Rodrigues   -   2018284515
 
 #I/O
 inputDIR="input"
