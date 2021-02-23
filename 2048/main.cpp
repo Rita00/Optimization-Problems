@@ -163,30 +163,30 @@ inline void caseRight(vector<int> &board, int size) {
     }
 }
 
-void breadthFirstSearch(vector<int> &board, int size, int maxMoves){
-    vector<int> queue = {LEFT,UP,RIGHT,DOWN};
-    cout<<"INICIAL\n";
+void breadthFirstSearch(vector<int> &board, int size, int maxMoves) {
+    vector<int> queue = {LEFT, UP, RIGHT, DOWN};
+    cout << "INICIAL" << endl;
     printMatrix(board, size);
-    for(int q : queue){
+    for (int q : queue) {
         switch (q) {
             case LEFT:
-                caseLeft(board,size);
-                cout<<"LEFT MOVE" << endl;
+                caseLeft(board, size);
+                cout << "LEFT MOVE" << endl;
                 printMatrix(board, size);
                 break;
             case UP:
-                caseUp(board,size);
-                cout<<"UP MOVE" << endl;
+                caseUp(board, size);
+                cout << "UP MOVE" << endl;
                 printMatrix(board, size);
                 break;
             case RIGHT:
-                caseRight(board,size);
-                cout<<"RIGHT MOVE" << endl;
+                caseRight(board, size);
+                cout << "RIGHT MOVE" << endl;
                 printMatrix(board, size);
                 break;
             case DOWN:
-                caseDown(board,size);
-                cout<<"DOWN MOVE" << endl;
+                caseDown(board, size);
+                cout << "DOWN MOVE" << endl;
                 printMatrix(board, size);
                 break;
             default:
