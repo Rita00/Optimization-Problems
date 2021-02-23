@@ -223,12 +223,12 @@ int main() {
     //get all boards
     vector<Board> boards = getInput(n);
     for (auto board : boards) {
-        cout << "=========Board===============" << endl;
-        printMatrix(board.vector, board.size);
+        //cout << "=========Board===============" << endl;
+        //printMatrix(board.vector, board.size);
         breadthFirstSearch(board.vector, board.size, board.max_moves);
-        cout << "---------------------------" << endl;
-        printMatrix(board.vector, board.size);
-        res(board.vector, board.size, board.max_moves);
+        //cout << "---------------------------" << endl;
+        //printMatrix(board.vector, board.size);
+        //res(board.vector, board.size, board.max_moves);
     }
     return 0;
 }
