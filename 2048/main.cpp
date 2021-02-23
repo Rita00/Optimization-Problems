@@ -4,18 +4,13 @@
  */
 #include <iostream>
 #include <vector>
-
-#define LEFT 0
-#define UP 1
-#define RIGHT 2
-#define DOWN 3
+#include <algorithm>
 
 using namespace std;
 
 typedef struct Board {
-    int size;
-    int max_moves;
-    int used_moves;
+    int size{};
+    int max_moves{};
     vector<int> matrix;
 } Board;
 
@@ -53,28 +48,30 @@ vector<Board> getInput(int n) {
     return board;
 }
 
-void printMatrix(vector<int> board, int size) {
+/*void printMatrix(vector<int> board, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             cout << board[i * size + j] << " ";
         }
         cout << endl;
     }
-}
+}*/
+
 /**
  * Verfifica se o jogo está resolvido contando o numero de 0's é igual ao tamanho da linha/coluna ao quadrado menos 1
  * @param board linha/coluna do vetor que representa a matriz
  * @param size tamanho do array
  * @return booleano que responde se o jogo está resolvido
  */
-bool isSolved(vector<int> board, int size){
-    long n = count(board.begin(),board.end(),0);
-    if(n==size*size-1){
+bool isSolved(vector<int> board, int size) {
+    long n = count(board.begin(), board.end(), 0);
+    if (n == size * size - 1) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
+
 /**
  * Faz as devidas somas dos indices do array , caso seja possível
  * Recebe o array na devida ordem
@@ -206,41 +203,22 @@ inline vector<int> caseRight(vector<int> board, int size) {
     return board;
 }
 
-int minMoves=-1;
-void depthFirstSearch(vector<int> board, int size, int i, int maxMoves) {
-   if(!isSolved(board, size)){
-        if (i>=maxMoves) {
+int minMoves;
+
+void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves) {
+    if (!isSolved(board, size)) {
+        if (used_moves >= minMoves || used_moves >= maxMoves) {
             return;
         }
-       depthFirstSearch(caseLeft(board, size),size,i+1,maxMoves);
-       depthFirstSearch(caseUp(board, size),size,i+1,maxMoves);
-       depthFirstSearch(caseRight(board, size),size,i+1,maxMoves);
-       depthFirstSearch(caseDown(board, size),size,i+1,maxMoves);
-     }else{
-         if(minMoves>i || minMoves<0){
-            minMoves=i;
+        depthFirstSearch(caseLeft(board, size), size, used_moves + 1, maxMoves);
+        depthFirstSearch(caseUp(board, size), size, used_moves + 1, maxMoves);
+        depthFirstSearch(caseRight(board, size), size, used_moves + 1, maxMoves);
+        depthFirstSearch(caseDown(board, size), size, used_moves + 1, maxMoves);
+    } else {
+        if (minMoves > used_moves || minMoves < 0) {
+            minMoves = used_moves;
         }
         return;
-    }
-}
-
-void res(vector<int> &board, int size, int maxMoves) {
-    char allMoves[] = {'A', 'W', 'S', 'D'}, move;
-
-    for (int k = 0; k < maxMoves; k++) {
-        move = 'D';
-        move = allMoves[rand() % 4];
-        if (move == 'A') {
-            caseLeft(board, size);
-        } else if (move == 'W') {
-            caseUp(board, size);
-        } else if (move == 'S') {
-            caseDown(board, size);
-        } else {
-            caseRight(board, size);
-        }
-        printMatrix(board, size);
-        cout << "---------------Move---------" << endl;
     }
 }
 
@@ -254,18 +232,18 @@ int main() {
     //get all boards
     vector<Board> boards = getInput(n);
     for (auto board : boards) {
-        minMoves=-1;
-        depthFirstSearch(board.matrix,board.size,0,board.max_moves);
-        if(minMoves >= 0){
+        minMoves = board.max_moves + 1;
+        depthFirstSearch(board.matrix, board.size, 0, board.max_moves);
+        if (minMoves <= board.max_moves) {
             cout << minMoves << endl;
-        }else{
+        } else {
             cout << "no solution" << endl;
         }
         //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
-        
+
         //cout << "=========Board===============" << endl;
         //printMatrix(board.vector, board.size);
-        
+
         //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
         //cout << "---------------------------" << endl;
         //printMatrix(board.vector, board.size);
@@ -273,7 +251,7 @@ int main() {
     }
     return 0;
 }
- 
+
 /*
 INPUT EXAMPLE
 
