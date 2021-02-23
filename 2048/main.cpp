@@ -1,24 +1,85 @@
+/**
+ * @author Ana Rita Rodrigues -  2018284515
+ * @author Dylan Gonçalves Perdigão - 2018233092
+ */
 #include <iostream>
-#include <cstdio>
-#include <cstring>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
 
 using namespace std;
 
-void getInput(string input) {
+typedef struct Board {
+    int size{};
+    int max_moves{};
+    vector<int> matrix;
+} Board;
 
+/**
+ * Permite obter o vetor que representa o tabuleiro do stdin
+ * @param size numero de linhas/colunas do tabuleiro
+ * @return vetor com o tabuleiro
+ */
+vector<int> getMatrix(int size) {
+    vector<int> vect;
+    int aux;
+    for (int i = 0; i < size * size; i++) {
+        cin >> aux;
+        vect.push_back(aux);
+    }
+    return vect;
 }
 
+/**
+ * Permite obter os tabuleiros com os respetivos tamanhos e jogadas maximas do stdin
+ * @param n numero de tabuleiros
+ * @return vetor com os tabuleiros
+ */
+vector<Board> getInput(int n) {
+    vector<Board> board;
+    Board aux;
+    int size, moves;
+    for (int i = 0; i < n; i++) {
+        cin >> size >> moves;
+        aux.size = size;
+        aux.max_moves = moves;
+        aux.matrix = getMatrix(size);
+        board.push_back(aux);
+    }
+    return board;
+}
 
-int boardAux[7][7] = {
-        {0, 4, 4,  8, 8, 4, 4},
-        {0, 0, 0,  2, 2, 4, 2},
-        {8, 0, 0,  2, 2, 4, 8},
-        {0, 0, 0,  0, 0, 0, 0},
-        {2, 2, 2,  2, 2, 2, 2},
-        {4, 4, 0,  4, 0, 0, 8},
-        {8, 8, 16, 0, 0, 4, 0}
-};
+/*void printMatrix(vector<int> board, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            cout << board[i * size + j] << " ";
+        }
+        cout << endl;
+    }
+}*/
 
+/**
+ * Verfifica se o jogo está resolvido contando o numero de 0's é igual ao tamanho da linha/coluna ao quadrado menos 1
+ * @param board linha/coluna do vetor que representa a matriz
+ * @param size tamanho do array
+ * @return booleano que responde se o jogo está resolvido
+ */
+bool isSolved(vector<int> board, int size) {
+    long n = count(board.begin(), board.end(), 0);
+    if (n == size * size - 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Faz as devidas somas dos indices do array , caso seja possível
+ * Recebe o array na devida ordem
+ * @param array linha/coluna do vetor que representa a matriz
+ * @param size tamanho do array
+ */
 inline void solveArray(int *array, int size) {
     int current, after;
     for (int i = 0; i < size - 1; i++) {
@@ -45,25 +106,36 @@ inline void solveArray(int *array, int size) {
     }
 }
 
-inline void caseUp(int **board, int size) {
+/**
+ * Modifica o vetor do jogo em questão passando a representar o movimento para cima
+ * @param board vetor de um determinado jogo/tabuleiro
+ * @param size numero de linhas/colunas do tabuleiro
+ */
+inline vector<int> caseUp(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
         fill(arrayAux, arrayAux + size, 0);
         for (int j = 0; j < size; j++) {
-            current = boardAux[j][i];
+            current = board[j * size + i];
             if (current)
                 arrayAux[aux++] = current;
         }
         solveArray(arrayAux, size);
         for (int j = size - 1; j >= 0; j--) {
-            boardAux[j][i] = arrayAux[j];
+            board[j * size + i] = arrayAux[j];
         }
     }
+    return board;
 }
 
-inline void caseDown(int **board, int size) {
+/**
+ * Modifica o vetor do jogo em questão passando a representar o movimento para baixo
+ * @param board vetor de um determinado jogo/tabuleiro
+ * @param size numero de linhas/colunas do tabuleiro
+ */
+inline vector<int> caseDown(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
@@ -71,93 +143,143 @@ inline void caseDown(int **board, int size) {
         fill(arrayAux, arrayAux + size, 0);
 
         for (int j = size - 1; j >= 0; j--) {
-            current = boardAux[j][i];
+            current = board[j * size + i];
             if (current)
                 arrayAux[aux++] = current;
         }
         solveArray(arrayAux, size);
-        for (int j = size - 1; j >= 0; j--) {
-            boardAux[j][i] = arrayAux[size - j - 1];
+        for (int j = 0; j < size; j++) {
+            board[j * size + i] = arrayAux[size - j - 1];
         }
     }
+    return board;
 }
 
-inline void caseLeft(int **board, int size) {
+/**
+ * Modifica o vetor do jogo em questão passando a representar o movimento para a esquerda
+ * @param board vetor de um determinado jogo/tabuleiro
+ * @param size numero de linhas/colunas do tabuleiro
+ */
+inline vector<int> caseLeft(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
         fill(arrayAux, arrayAux + size, 0);
         for (int j = 0; j < size; j++) {
-            current = boardAux[i][j];
+            current = board[i * size + j];
             if (current) {
                 arrayAux[aux++] = current;
             }
         }
         solveArray(arrayAux, size);
-        memcpy(boardAux[i], arrayAux, sizeof(int) * size);
+        for (int j = 0; j < size; j++) {
+            board[i * size + j] = arrayAux[j];
+        }
     }
+    return board;
 }
 
-inline void caseRight(int **board, int size) {
+/**
+ * Modifica o vetor do jogo em questão passando a representar o movimento para a direita
+ * @param board vetor de um determinado jogo/tabuleiro
+ * @param size numero de linhas/colunas do tabuleiro
+ */
+inline vector<int> caseRight(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
         fill(arrayAux, arrayAux + size, 0);
         for (int j = size - 1; j >= 0; j--) {
-            current = boardAux[i][j];
+            current = board[i * size + j];
             if (current) {
                 arrayAux[aux++] = current;
             }
         }
         solveArray(arrayAux, size);
         for (int j = size - 1; j >= 0; j--) {
-            boardAux[i][j] = arrayAux[size - j - 1];
+            board[i * size + j] = arrayAux[size - j - 1];
         }
     }
+    return board;
 }
 
-void res(int **board, int size, int maxMoves) {
-    char allMoves[] = {'A', 'W', 'S', 'D'}, move;
-
-    for (int k = 0; k < maxMoves; k++) {
-        move = 'D';
-        //move = allMoves[rand() % 4];
-        if (move == 'A') {
-            caseLeft(board, 7);
-        } else if (move == 'W') {
-            caseUp(board, size);
-        } else if (move == 'S') {
-            caseDown(board, size);
+void breadthFirstSearch(vector<int> board, int size, int maxMoves) {
+    queue<pair<vector<int>, int>> fila;
+    fila.push(make_pair(board, 0));
+    while (!fila.empty()) {
+        pair<vector<int>, int> par = fila.front();
+        fila.pop();
+        vector<int> current_board = par.first;
+        int done_moves = par.second;
+        if (!isSolved(current_board, size)) {
+            if (done_moves >= maxMoves) {
+                continue;
+            }
+            fila.push(make_pair(caseLeft(current_board, size), done_moves + 1));
+            fila.push(make_pair(caseUp(current_board, size), done_moves + 1));
+            fila.push(make_pair(caseRight(current_board, size), done_moves + 1));
+            fila.push(make_pair(caseDown(current_board, size), done_moves + 1));
         } else {
-            caseRight(board, size);
+            cout << done_moves << endl;
+            return;
         }
     }
-}
-
-void printMatrix(int **board, int size) {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            printf("%d ", boardAux[i][j]);
-        }
-        printf("\n");
-    }
+    cout << "no solution" << endl;
 }
 
 int main() {
-    printMatrix(NULL, 7);
-    res(NULL, 7, 1);
-    printf("---------------------------\n");
-    printMatrix(NULL, 7);
-    //string input;
     //faster with this lines
-    //ios_base::sync_with_stdio(0);
-    //cin.tie(0);
-    //input
-    //cin >> input;
-    //cout << input << "\n";
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    //get number of boards
+    int n;
+    cin >> n;
+    //get all boards
+    vector<Board> boards = getInput(n);
+    for (auto board : boards) {
+        breadthFirstSearch(board.matrix, board.size, board.max_moves);
+        //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
+
+        //cout << "=========Board===============" << endl;
+        //printMatrix(board.vector, board.size);
+
+        //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
+        //cout << "---------------------------" << endl;
+        //printMatrix(board.vector, board.size);
+        //res(board.vector, board.size, board.max_moves);
+    }
     return 0;
 }
+
+/*
+INPUT EXAMPLE
+
+4
+3 5
+2 0 2
+4 0 8
+0 0 0
+3 10
+4 2 4
+4 2 4
+4 4 4
+3 4
+4 2 4
+4 2 4
+4 4 4
+4 10
+8 4 0 0
+4 0 0 0
+8 4 0 0
+0 0 4 0
  
+EXAMPLE OUTPUT
  
+3
+5
+no solution
+4
+ 
+*/
