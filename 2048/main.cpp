@@ -92,20 +92,19 @@ inline void caseUp(vector<int> &board, int size) {
     }
 }
 
-inline void caseDown(vector<int> board, int size) {
+inline void caseDown(vector<int> &board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
         aux = 0;
         fill(arrayAux, arrayAux + size, 0);
-
         for (int j = size - 1; j >= 0; j--) {
             current = board[j * size + i];
             if (current)
                 arrayAux[aux++] = current;
         }
         solveArray(arrayAux, size);
-        for (int j = size - 1; j >= 0; j--) {
+        for (int j = 0; j < size; j++) {
             board[j * size + i] = arrayAux[size - j - 1];
         }
     }
@@ -125,7 +124,7 @@ inline void caseLeft(vector<int> &board, int size) {
         }
         solveArray(arrayAux, size);
         for (int j = 0; j < size; j++) {
-            board[j * size + i] = arrayAux[j];
+            board[i * size + j] = arrayAux[j];
         }
     }
 }
@@ -149,24 +148,6 @@ inline void caseRight(vector<int> &board, int size) {
     }
 }
 
-void res(vector<int> &board, int size, int maxMoves) {
-    char allMoves[] = {'A', 'W', 'S', 'D'}, move;
-
-    for (int k = 0; k < maxMoves; k++) {
-        move = 'D';
-        //move = allMoves[rand() % 4];
-        if (move == 'A') {
-            caseLeft(board, 7);
-        } else if (move == 'W') {
-            caseUp(board, size);
-        } else if (move == 'S') {
-            caseDown(board, size);
-        } else {
-            caseRight(board, size);
-        }
-    }
-}
-
 void printMatrix(vector<int> board, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
@@ -175,6 +156,26 @@ void printMatrix(vector<int> board, int size) {
         cout << endl;
     }
 
+}
+
+void res(vector<int> &board, int size, int maxMoves) {
+    char allMoves[] = {'A', 'W', 'S', 'D'}, move;
+
+    for (int k = 0; k < maxMoves; k++) {
+        move = 'A';
+        //move = allMoves[rand() % 4];
+        if (move == 'A') {
+            caseLeft(board, size);
+        } else if (move == 'W') {
+            caseUp(board, size);
+        } else if (move == 'S') {
+            caseDown(board, size);
+        } else {
+            caseRight(board, size);
+        }
+        printMatrix(board, size);
+        cout << "---------------Move---------" << endl;
+    }
 }
 
 int main() {
@@ -188,10 +189,7 @@ int main() {
     vector<Board> boards = getInput(n);
     for (auto board : boards) {
         cout << "=========Board===============" << endl;
-        printMatrix(board.vector, board.size);
         res(board.vector, board.size, board.max_moves);
-        cout << "---------------------------" << endl;
-        printMatrix(board.vector, board.size);
     }
     return 0;
 }
