@@ -5,6 +5,11 @@
 #include <iostream>
 #include <vector>
 
+#define LEFT 0
+#define UP 1
+#define RIGHT 2
+#define DOWN 3
+
 using namespace std;
 
 typedef struct Board {
@@ -46,6 +51,15 @@ vector<Board> getInput(int n) {
         board.push_back(aux);
     }
     return board;
+}
+
+void printMatrix(vector<int> board, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            cout << board[i * size + j] << " ";
+        }
+        cout << endl;
+    }
 }
 
 inline void solveArray(int *array, int size) {
@@ -149,12 +163,42 @@ inline void caseRight(vector<int> &board, int size) {
     }
 }
 
+void breadthFirstSearch(vector<int> &board, int size, int maxMoves){
+    vector<int> queue = {LEFT,UP,RIGHT,DOWN};
+    cout<<"INICIAL\n";
+    printMatrix(board, size);
+    for(int q : queue){
+        switch (q) {
+            case LEFT:
+                caseLeft(board,size);
+                cout<<"LEFT MOVE\n";
+                printMatrix(board, size);
+                break;
+            case UP:
+                caseUp(board,size);
+                cout<<"UP MOVE\n";
+                printMatrix(board, size);
+                break;
+            case RIGHT:
+                caseRight(board,size);
+                cout<<"RIGHT MOVE\n";
+                printMatrix(board, size);
+                break;
+            case DOWN:
+                caseDown(board,size);
+                cout<<"DOWN MOVE\n";
+                printMatrix(board, size);
+                break;
+        }
+    }
+}
+
 void res(vector<int> &board, int size, int maxMoves) {
     char allMoves[] = {'A', 'W', 'S', 'D'}, move;
 
     for (int k = 0; k < maxMoves; k++) {
         move = 'D';
-        //move = allMoves[rand() % 4];
+        move = allMoves[rand() % 4];
         if (move == 'A') {
             caseLeft(board, 7);
         } else if (move == 'W') {
@@ -165,16 +209,6 @@ void res(vector<int> &board, int size, int maxMoves) {
             caseRight(board, size);
         }
     }
-}
-
-void printMatrix(vector<int> board, int size) {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            cout << board[i * size + j] << " ";
-        }
-        cout << endl;
-    }
-
 }
 
 int main() {
@@ -189,7 +223,7 @@ int main() {
     for (auto board : boards) {
         cout << "=========Board===============" << endl;
         printMatrix(board.vector, board.size);
-        res(board.vector, board.size, board.max_moves);
+        breadthFirstSearch(board.vector, board.size, board.max_moves);
         cout << "---------------------------" << endl;
         printMatrix(board.vector, board.size);
     }
