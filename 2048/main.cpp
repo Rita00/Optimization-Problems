@@ -62,6 +62,12 @@ void printMatrix(vector<int> board, int size) {
     }
 }
 
+/**
+ * Faz as devidas somas dos indices do array , caso seja possível
+ * Recebe o array na devida ordem
+ * @param array linha/coluna do vetor que representa a matriz
+ * @param size tamanho do array
+ */
 inline void solveArray(int *array, int size) {
     int current, after;
     for (int i = 0; i < size - 1; i++) {
@@ -88,6 +94,11 @@ inline void solveArray(int *array, int size) {
     }
 }
 
+/**
+ * Modifica o vetor do jogo em questão passando a representar o movimento para cima
+ * @param board vetor de um determinado jogo/tabuleiro
+ * @param size numero de linhas/colunas do tabuleiro
+ */
 inline void caseUp(vector<int> &board, int size) {
     int current, aux;
     int arrayAux[size];
@@ -106,6 +117,11 @@ inline void caseUp(vector<int> &board, int size) {
     }
 }
 
+/**
+ * Modifica o vetor do jogo em questão passando a representar o movimento para baixo
+ * @param board vetor de um determinado jogo/tabuleiro
+ * @param size numero de linhas/colunas do tabuleiro
+ */
 inline void caseDown(vector<int> &board, int size) {
     int current, aux;
     int arrayAux[size];
@@ -125,6 +141,11 @@ inline void caseDown(vector<int> &board, int size) {
     }
 }
 
+/**
+ * Modifica o vetor do jogo em questão passando a representar o movimento para a esquerda
+ * @param board vetor de um determinado jogo/tabuleiro
+ * @param size numero de linhas/colunas do tabuleiro
+ */
 inline void caseLeft(vector<int> &board, int size) {
     int current, aux;
     int arrayAux[size];
@@ -144,6 +165,11 @@ inline void caseLeft(vector<int> &board, int size) {
     }
 }
 
+/**
+ * Modifica o vetor do jogo em questão passando a representar o movimento para a direita
+ * @param board vetor de um determinado jogo/tabuleiro
+ * @param size numero de linhas/colunas do tabuleiro
+ */
 inline void caseRight(vector<int> &board, int size) {
     int current, aux;
     int arrayAux[size];
