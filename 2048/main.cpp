@@ -189,6 +189,8 @@ void breadthFirstSearch(vector<int> &board, int size, int maxMoves){
                 cout<<"DOWN MOVE\n";
                 printMatrix(board, size);
                 break;
+            default:
+                break;
         }
     }
 }
