@@ -171,22 +171,22 @@ void breadthFirstSearch(vector<int> &board, int size, int maxMoves){
         switch (q) {
             case LEFT:
                 caseLeft(board,size);
-                cout<<"LEFT MOVE\n";
+                cout<<"LEFT MOVE" << endl;
                 printMatrix(board, size);
                 break;
             case UP:
                 caseUp(board,size);
-                cout<<"UP MOVE\n";
+                cout<<"UP MOVE" << endl;
                 printMatrix(board, size);
                 break;
             case RIGHT:
                 caseRight(board,size);
-                cout<<"RIGHT MOVE\n";
+                cout<<"RIGHT MOVE" << endl;
                 printMatrix(board, size);
                 break;
             case DOWN:
                 caseDown(board,size);
-                cout<<"DOWN MOVE\n";
+                cout<<"DOWN MOVE" << endl;
                 printMatrix(board, size);
                 break;
             default:
