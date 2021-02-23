@@ -61,7 +61,20 @@ void printMatrix(vector<int> board, int size) {
         cout << endl;
     }
 }
-
+/**
+ * Verfifica se o jogo está resolvido contando o numero de 0's é igual ao tamanho da linha/coluna ao quadrado menos 1
+ * @param board linha/coluna do vetor que representa a matriz
+ * @param size tamanho do array
+ * @return booleano que responde se o jogo está resolvido
+ */
+bool isSolved(vector<int> board, int size){
+    long n = count(board.begin(),board.end(),0);
+    if(n==size*size-1){
+        return true;
+    }else{
+        return false;
+    }
+}
 /**
  * Faz as devidas somas dos indices do array , caso seja possível
  * Recebe o array na devida ordem
@@ -99,7 +112,7 @@ inline void solveArray(int *array, int size) {
  * @param board vetor de um determinado jogo/tabuleiro
  * @param size numero de linhas/colunas do tabuleiro
  */
-inline void caseUp(vector<int> &board, int size) {
+inline vector<int> caseUp(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
@@ -115,6 +128,7 @@ inline void caseUp(vector<int> &board, int size) {
             board[j * size + i] = arrayAux[j];
         }
     }
+    return board;
 }
 
 /**
@@ -122,7 +136,7 @@ inline void caseUp(vector<int> &board, int size) {
  * @param board vetor de um determinado jogo/tabuleiro
  * @param size numero de linhas/colunas do tabuleiro
  */
-inline void caseDown(vector<int> &board, int size) {
+inline vector<int> caseDown(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
@@ -139,6 +153,7 @@ inline void caseDown(vector<int> &board, int size) {
             board[j * size + i] = arrayAux[size - j - 1];
         }
     }
+    return board;
 }
 
 /**
@@ -146,7 +161,7 @@ inline void caseDown(vector<int> &board, int size) {
  * @param board vetor de um determinado jogo/tabuleiro
  * @param size numero de linhas/colunas do tabuleiro
  */
-inline void caseLeft(vector<int> &board, int size) {
+inline vector<int> caseLeft(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
@@ -163,6 +178,7 @@ inline void caseLeft(vector<int> &board, int size) {
             board[i * size + j] = arrayAux[j];
         }
     }
+    return board;
 }
 
 /**
@@ -170,7 +186,7 @@ inline void caseLeft(vector<int> &board, int size) {
  * @param board vetor de um determinado jogo/tabuleiro
  * @param size numero de linhas/colunas do tabuleiro
  */
-inline void caseRight(vector<int> &board, int size) {
+inline vector<int> caseRight(vector<int> board, int size) {
     int current, aux;
     int arrayAux[size];
     for (int i = 0; i < size; i++) {
@@ -187,37 +203,21 @@ inline void caseRight(vector<int> &board, int size) {
             board[i * size + j] = arrayAux[size - j - 1];
         }
     }
+    return board;
 }
 
-void breadthFirstSearch(vector<int> &board, int size, int maxMoves) {
-    vector<int> queue = {LEFT, UP, RIGHT, DOWN};
-    cout << "INITIAL" << endl;
-    printMatrix(board, size);
-    for (int q : queue) {
-        switch (q) {
-            case LEFT:
-                caseLeft(board, size);
-                cout << "LEFT MOVE" << endl;
-                printMatrix(board, size);
-                break;
-            case UP:
-                caseUp(board, size);
-                cout << "UP MOVE" << endl;
-                printMatrix(board, size);
-                break;
-            case RIGHT:
-                caseRight(board, size);
-                cout << "RIGHT MOVE" << endl;
-                printMatrix(board, size);
-                break;
-            case DOWN:
-                caseDown(board, size);
-                cout << "DOWN MOVE" << endl;
-                printMatrix(board, size);
-                break;
-            default:
-                break;
+void depthFirstSearch(vector<int> board, int size, int i, int maxMoves) {
+   if(!isSolved(board, size)){
+        if (i>=maxMoves) {
+            return;
         }
+       depthFirstSearch(caseLeft(board, size),size,i+1,maxMoves);
+       depthFirstSearch(caseUp(board, size),size,i+1,maxMoves);
+       depthFirstSearch(caseRight(board, size),size,i+1,maxMoves);
+       depthFirstSearch(caseDown(board, size),size,i+1,maxMoves);
+     }else{
+        cout << i << endl;
+        return;
     }
 }
 
@@ -251,9 +251,13 @@ int main() {
     //get all boards
     vector<Board> boards = getInput(n);
     for (auto board : boards) {
+        depthFirstSearch(board.vector,board.size,0,board.max_moves);
+        //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
+        
         //cout << "=========Board===============" << endl;
         //printMatrix(board.vector, board.size);
-        breadthFirstSearch(board.vector, board.size, board.max_moves);
+        
+        //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
         //cout << "---------------------------" << endl;
         //printMatrix(board.vector, board.size);
         //res(board.vector, board.size, board.max_moves);
@@ -261,4 +265,11 @@ int main() {
     return 0;
 }
  
-
+/*
+1
+3 5
+2 0 2
+4 0 8
+0 0 0
+ 
+ */
