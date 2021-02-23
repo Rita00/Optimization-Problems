@@ -16,7 +16,7 @@ typedef struct Board {
     int size;
     int max_moves;
     int used_moves;
-    vector<int> vector;
+    vector<int> matrix;
 } Board;
 
 /**
@@ -24,7 +24,7 @@ typedef struct Board {
  * @param size numero de linhas/colunas do tabuleiro
  * @return vetor com o tabuleiro
  */
-vector<int> getVector(int size) {
+vector<int> getMatrix(int size) {
     vector<int> vect;
     int aux;
     for (int i = 0; i < size * size; i++) {
@@ -47,7 +47,7 @@ vector<Board> getInput(int n) {
         cin >> size >> moves;
         aux.size = size;
         aux.max_moves = moves;
-        aux.vector = getVector(size);
+        aux.matrix = getMatrix(size);
         board.push_back(aux);
     }
     return board;
@@ -206,6 +206,7 @@ inline vector<int> caseRight(vector<int> board, int size) {
     return board;
 }
 
+int minMoves=-1;
 void depthFirstSearch(vector<int> board, int size, int i, int maxMoves) {
    if(!isSolved(board, size)){
         if (i>=maxMoves) {
@@ -216,7 +217,9 @@ void depthFirstSearch(vector<int> board, int size, int i, int maxMoves) {
        depthFirstSearch(caseRight(board, size),size,i+1,maxMoves);
        depthFirstSearch(caseDown(board, size),size,i+1,maxMoves);
      }else{
-        cout << i << endl;
+         if(minMoves>i || minMoves<0){
+            minMoves=i;
+        }
         return;
     }
 }
@@ -251,7 +254,13 @@ int main() {
     //get all boards
     vector<Board> boards = getInput(n);
     for (auto board : boards) {
-        depthFirstSearch(board.vector,board.size,0,board.max_moves);
+        minMoves=-1;
+        depthFirstSearch(board.matrix,board.size,0,board.max_moves);
+        if(minMoves >= 0){
+            cout << minMoves << endl;
+        }else{
+            cout << "no solution" << endl;
+        }
         //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
         
         //cout << "=========Board===============" << endl;
@@ -266,10 +275,32 @@ int main() {
 }
  
 /*
-1
+INPUT EXAMPLE
+
+4
 3 5
 2 0 2
 4 0 8
 0 0 0
+3 10
+4 2 4
+4 2 4
+4 4 4
+3 4
+4 2 4
+4 2 4
+4 4 4
+4 10
+8 4 0 0
+4 0 0 0
+8 4 0 0
+0 0 4 0
  
- */
+EXAMPLE OUTPUT
+ 
+3
+5
+no solution
+4
+ 
+*/
