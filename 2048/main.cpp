@@ -165,7 +165,7 @@ inline void caseRight(vector<int> &board, int size) {
 
 void breadthFirstSearch(vector<int> &board, int size, int maxMoves) {
     vector<int> queue = {LEFT, UP, RIGHT, DOWN};
-    cout << "INICIAL" << endl;
+    cout << "INITIAL" << endl;
     printMatrix(board, size);
     for (int q : queue) {
         switch (q) {
