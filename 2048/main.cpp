@@ -207,25 +207,25 @@ int minMoves;
 
 void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves) {
     if (!isSolved(board, size)) {
-        if (used_moves >= minMoves || used_moves >= maxMoves) {
+        if (used_moves >= minMoves - 1) {
             return;
         }
         // Check if transformation was effective, if not ignore recursive step
         vector<int> aux = caseLeft(board, size);
         if (aux != board) {
-            depthFirstSearch(aux , size, used_moves + 1, maxMoves);
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves);
         }
         aux = caseUp(board, size);
         if (aux != board) {
-            depthFirstSearch(aux , size, used_moves + 1, maxMoves);
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves);
         }
         aux = caseRight(board, size);
         if (aux != board) {
-            depthFirstSearch(aux , size, used_moves + 1, maxMoves);
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves);
         }
         aux = caseDown(board, size);
         if (aux != board) {
-            depthFirstSearch(aux , size, used_moves + 1, maxMoves);
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves);
         }
     } else {
         if (minMoves > used_moves || minMoves < 0) {
