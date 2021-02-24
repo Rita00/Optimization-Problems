@@ -66,7 +66,7 @@ void printMatrix(vector<int> board, int size) {
  * @param size tamanho do array
  * @return booleano que responde se o jogo está resolvido
  */
-bool isSolved(vector<int> board,int size) {
+bool isSolved(vector<int> board) {
     int cnt = 0;
     //115PTS
     for (int b : board) {
@@ -296,7 +296,7 @@ inline vector<int> caseRight(vector<int> board, int size) {
 int minMoves;
 
 void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves) {
-    if (!isSolved(board,size)) {
+    if (!isSolved(board)) {
         if (used_moves >= minMoves - 1) {
             return;
         }
