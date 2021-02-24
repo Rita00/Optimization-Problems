@@ -2,9 +2,10 @@
  * @author Ana Rita Rodrigues -  2018284515
  * @author Dylan Gonçalves Perdigão - 2018233092
  */
+#include <algorithm>
+#include <math.h>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -13,6 +14,8 @@ typedef struct Board {
     int max_moves{};
     vector<int> matrix;
 } Board;
+
+int minMoves;
 
 /**
  * Permite obter o vetor que representa o tabuleiro do stdin
@@ -63,48 +66,15 @@ void printMatrix(vector<int> board, int size) {
 /**
  * Verfifica se o jogo está resolvido contando o numero de 0's é igual ao tamanho da linha/coluna ao quadrado menos 1
  * @param board linha/coluna do vetor que representa a matriz
- * @param size tamanho do array
  * @return booleano que responde se o jogo está resolvido
  */
 bool isSolved(vector<int> board) {
     int cnt = 0;
-    //115PTS
     for (int b : board) {
         if (b != 0) cnt++;
         if (cnt > 1) return false;
     }
     return true;
-    /*
-    //75PTS
-    for (auto it=board.cbegin()+1; it<board.cbegin()+size-1; it++) {
-        if (*it != 0) cnt++;
-    }
-    for (auto it=board.cend()-size+1; it<board.cend()-1; it++) {
-        if (*it != 0) cnt++;
-    }
-    for (auto it=board.cbegin(); it<board.cend(); it+=size) {
-        if (*it != 0) cnt++;
-    }
-    for (auto it=board.cbegin()+size-1; it<board.cend(); it+=size) {
-        if (*it != 0) cnt++;
-    }
-    if (cnt > 1) return false;
-
-    //75PTS
-    for (int i=0;i<size;i++) {
-        //coluna da esquerda
-        if (board[i*size] != 0) cnt++;
-        //coluna da direita
-        if (board[i*size+(size-1)] != 0) cnt++;
-        //para nao verificar elementos já percorridos (efetuar so um if para as duas instrucoes)
-        if(i>0 && i<size-1){
-            //linha de cima (sem o primeiro e ultimo elemento que já foram verificados)
-            if (board[i] != 0) cnt++;
-            //linha de baixo (sem o primeiro e ultimo elemento que já foram verificados)
-            if (board[i+size*(size-1)] != 0) cnt++;
-        }
-        if (cnt > 1) return false;
-    } */
 }
 
 /**
@@ -293,8 +263,6 @@ inline vector<int> caseRight(vector<int> board, int size) {
     return board;
 }
 
-int minMoves;
-
 void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves) {
     if (!isSolved(board)) {
         if (used_moves >= minMoves - 1) {
@@ -334,6 +302,37 @@ void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves)
     }
 }
 
+void breadthFirstSearch(vector<int> board, int size) {
+    vector<vector<int>> boards;
+    minMoves=0;
+    if(!isSolved(board)){
+        boards.push_back(caseLeft(board, size));
+        boards.push_back(caseUp(board, size));
+        boards.push_back(caseRight(board, size));
+        boards.push_back(caseDown(board, size));
+        minMoves++;
+        while(!boards.empty()){
+            boards.erase(boards.begin());
+            vector<vector<int>> aux = boards;
+            for(auto b : aux){
+                if(!isSolved(b)){
+                    boards.push_back(caseLeft(b, size));
+                    boards.push_back(caseUp(b, size));
+                    boards.push_back(caseRight(b, size));
+                    boards.push_back(caseDown(b, size));
+                }else{
+                    return;
+                }
+                minMoves++;
+            }
+        }
+        return;
+    }else{
+        return;
+    }
+}
+
+
 int main() {
     //faster with this lines
     ios_base::sync_with_stdio(false);
@@ -351,15 +350,15 @@ int main() {
         } else {
             cout << "no solution" << endl;
         }
-        //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
-
-        //cout << "=========Board===============" << endl;
-        //printMatrix(board.vector, board.size);
-
-        //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
-        //cout << "---------------------------" << endl;
-        //printMatrix(board.vector, board.size);
-        //res(board.vector, board.size, board.max_moves);
+        /*
+        breadthFirstSearch(board.matrix, board.size);
+        int m = (int)(log2(minMoves)/log2(4));
+        if (m <= board.max_moves) {
+            cout << m << endl;
+        } else {
+            cout << "no solution" << endl;
+        }
+        */
     }
     return 0;
 }
@@ -393,30 +392,4 @@ EXAMPLE OUTPUT
 no solution
 4
  
-*/
-/*
-int main() {
-    vector<int>::iterator it;
-    int size=4;
-    vector<int> board = {0,1,2,3,
-                        4,5,6,7,
-                        8,9,10,11,
-                        12,13,14,15};
-    for (it=board.begin()+1; it<board.begin()+size-1; it++) {
-        cout << *it <<endl;
-    }
-    cout <<endl;
-    for (it=board.end()-size+1; it<board.end()-1; it++) {
-        cout << *it <<endl;
-    }
-    cout <<endl;
-    for (it=board.begin(); it<board.end(); it+=size) {
-        cout << *it <<endl;
-    }
-    cout <<endl;
-    for (it=board.begin()+size-1; it<board.end(); it+=size) {
-        cout << *it <<endl;
-    }
-    cout <<endl;
-}
 */
