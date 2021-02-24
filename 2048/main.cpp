@@ -217,10 +217,22 @@ void breadthFirstSearch(vector<int> board, int size, int maxMoves) {
             if (done_moves >= maxMoves) {
                 continue;
             }
-            fila.push(make_pair(caseLeft(current_board, size), done_moves + 1));
-            fila.push(make_pair(caseUp(current_board, size), done_moves + 1));
-            fila.push(make_pair(caseRight(current_board, size), done_moves + 1));
-            fila.push(make_pair(caseDown(current_board, size), done_moves + 1));
+            vector<int> aux = caseLeft(current_board, size);
+            if (aux != board){
+                fila.push(make_pair(aux, done_moves + 1));
+            }
+            aux = caseUp(current_board, size);
+            if (aux != board){
+                fila.push(make_pair(aux, done_moves + 1));
+            }
+            aux = caseRight(current_board, size);
+            if (aux != board){
+                fila.push(make_pair(aux, done_moves + 1));
+            }
+            aux = caseDown(current_board, size);
+            if (aux != board){
+                fila.push(make_pair(aux, done_moves + 1));
+            }
         } else {
             cout << done_moves << endl;
             return;
