@@ -3,10 +3,8 @@
  * @author Dylan Gonçalves Perdigão - 2018233092
  */
 #include <algorithm>
-#include <math.h>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -55,14 +53,14 @@ vector<Board> getInput(int n) {
     return boards;
 }
 
-void printMatrix(vector<int> board, int size) {
+/*void printMatrix(vector<int> board, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             cout << board[i * size + j] << " ";
         }
         cout << endl;
     }
-}
+}*/
 
 /**
  * Verfifica se o jogo está resolvido contando o numero de 0's é igual ao tamanho da linha/coluna ao quadrado menos 1
@@ -114,38 +112,6 @@ bool isSolved(vector<int> board, char move, int size) {
             break;
     }
     return true;
-}
-
-/**
- * Faz as devidas somas dos indices do array , caso seja possível
- * Recebe o array na devida ordem
- * @param array linha/coluna do vetor que representa a matriz
- * @param size tamanho do array
- */
-inline void solveArray(int *array, int size) {
-    int current, after;
-    for (int i = 0; i < size - 1; i++) {
-        current = array[i];
-        after = array[i + 1];
-        if (after) {
-            if (after == current) {
-                //Operações bitwise são mais rápidas
-                array[i] = after << 1;
-                array[i + 1] = 0;
-            }
-        } else {
-            // Evita iterações desnecessárias assim que encontra o primeiro zero no array
-            break;
-        }
-    }
-    int aux = 0;
-    for (int j = 0; j < size; j++) {
-        if (array[j])
-            array[aux++] = array[j];
-    }
-    for (int j = aux; j < size; j++) {
-        array[j] = 0;
-    }
 }
 
 /**
@@ -342,7 +308,7 @@ void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves,
     }
 }
 
-void breadthFirstSearch(vector<int> board, int size) {
+/*void breadthFirstSearch(vector<int> board, int size) {
     vector<vector<int>> boards;
     minMoves=0;
     if(!isSolved(board)){
@@ -370,7 +336,7 @@ void breadthFirstSearch(vector<int> board, int size) {
     }else{
         return;
     }
-}
+}*/
 
 
 int main() {
