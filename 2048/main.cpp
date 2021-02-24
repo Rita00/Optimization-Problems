@@ -21,8 +21,10 @@ typedef struct Board {
  */
 vector<int> getMatrix(int size) {
     vector<int> vect;
+    int total_size = size * size;
+    vect.reserve(total_size);
     int aux;
-    for (int i = 0; i < size * size; i++) {
+    for (int i = 0; i < total_size; i++) {
         cin >> aux;
         vect.push_back(aux);
     }
@@ -35,7 +37,8 @@ vector<int> getMatrix(int size) {
  * @return vetor com os tabuleiros
  */
 vector<Board> getInput(int n) {
-    vector<Board> board;
+    vector<Board> boards;
+    boards.reserve(n);
     Board aux;
     int size, moves;
     for (int i = 0; i < n; i++) {
@@ -43,9 +46,9 @@ vector<Board> getInput(int n) {
         aux.size = size;
         aux.max_moves = moves;
         aux.matrix = getMatrix(size);
-        board.push_back(aux);
+        boards.push_back(aux);
     }
-    return board;
+    return boards;
 }
 
 /*void printMatrix(vector<int> board, int size) {
@@ -63,13 +66,13 @@ vector<Board> getInput(int n) {
  * @param size tamanho do array
  * @return booleano que responde se o jogo está resolvido
  */
-bool isSolved(vector<int> board, int size) {
-    long n = count(board.begin(), board.end(), 0);
-    if (n == size * size - 1) {
-        return true;
-    } else {
-        return false;
+bool isSolved(vector<int> board) {
+    int cnt = 0;
+    for (int i : board) {
+        if (i != 0) cnt++;
+        if (cnt > 1) return false;
     }
+    return true;
 }
 
 /**
@@ -206,7 +209,7 @@ inline vector<int> caseRight(vector<int> board, int size) {
 int minMoves;
 
 void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves) {
-    if (!isSolved(board, size)) {
+    if (!isSolved(board)) {
         if (used_moves >= minMoves - 1) {
             return;
         }
@@ -214,21 +217,30 @@ void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves)
         vector<int> aux = caseLeft(board, size);
         if (aux != board) {
             depthFirstSearch(aux, size, used_moves + 1, maxMoves);
+            if (used_moves >= minMoves - 1) {
+                return;
+            }
         }
         aux = caseUp(board, size);
         if (aux != board) {
             depthFirstSearch(aux, size, used_moves + 1, maxMoves);
+            if (used_moves >= minMoves - 1) {
+                return;
+            }
         }
         aux = caseRight(board, size);
         if (aux != board) {
             depthFirstSearch(aux, size, used_moves + 1, maxMoves);
+            if (used_moves >= minMoves - 1) {
+                return;
+            }
         }
         aux = caseDown(board, size);
         if (aux != board) {
             depthFirstSearch(aux, size, used_moves + 1, maxMoves);
         }
     } else {
-        if (minMoves > used_moves || minMoves < 0) {
+        if (minMoves > used_moves) {
             minMoves = used_moves;
         }
         return;
