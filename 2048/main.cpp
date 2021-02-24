@@ -66,11 +66,48 @@ void printMatrix(vector<int> board, int size) {
  * @param size tamanho do array
  * @return booleano que responde se o jogo está resolvido
  */
-bool isSolved(vector<int> board) {
-    int cnt = 0;
-    for (int i : board) {
-        if (i != 0) cnt++;
-        if (cnt > 1) return false;
+bool isSolved(vector<int> board, char move, int size) {
+    int cnt = 0, num_it;
+    switch (move) {
+        case 'L':
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (board[j * size + i] != 0) cnt++;
+                    if (cnt > 1)
+                        return false;
+                }
+            }
+            break;
+        case 'U':
+            for (int i = 0; i <= size * 2; i++) {
+                if (board[i] != 0) cnt++;
+                if (cnt > 1)
+                    return false;
+            }
+            break;
+        case 'D':
+            num_it = (size * size - 1) - (size * 2);
+            for (int i = size * size - 1; i >= num_it; i--) {
+                if (board[i] != 0) cnt++;
+                if (cnt > 1)
+                    return false;
+            }
+            break;
+        case 'R':
+            for (int i = size - 1; i >= size - 2; i--) {
+                for (int j = 0; j < size; j++) {
+                    if (board[j * size + i] != 0) cnt++;
+                    if (cnt > 1)
+                        return false;
+                }
+            }
+            break;
+        default:
+            for (int i : board) {
+                if (i != 0) cnt++;
+                if (cnt > 1) return false;
+            }
+            break;
     }
     return true;
 }
@@ -263,36 +300,36 @@ inline vector<int> caseRight(vector<int> board, int size) {
 
 int minMoves;
 
-void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves) {
-    if (!isSolved(board)) {
+void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves, char move) {
+    if (!isSolved(board, move, size)) {
         if (used_moves >= minMoves - 1) {
             return;
         }
         // Check if transformation was effective, if not ignore recursive step
         vector<int> aux = caseLeft(board, size);
         if (aux != board) {
-            depthFirstSearch(aux, size, used_moves + 1, maxMoves);
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'L');
             if (used_moves >= minMoves - 1) {
                 return;
             }
         }
         aux = caseUp(board, size);
         if (aux != board) {
-            depthFirstSearch(aux, size, used_moves + 1, maxMoves);
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'U');
             if (used_moves >= minMoves - 1) {
                 return;
             }
         }
         aux = caseRight(board, size);
         if (aux != board) {
-            depthFirstSearch(aux, size, used_moves + 1, maxMoves);
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'R');
             if (used_moves >= minMoves - 1) {
                 return;
             }
         }
         aux = caseDown(board, size);
         if (aux != board) {
-            depthFirstSearch(aux, size, used_moves + 1, maxMoves);
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'D');
         }
     } else {
         if (minMoves > used_moves) {
@@ -313,7 +350,7 @@ int main() {
     vector<Board> boards = getInput(n);
     for (auto board : boards) {
         minMoves = board.max_moves + 1;
-        depthFirstSearch(board.matrix, board.size, 0, board.max_moves);
+        depthFirstSearch(board.matrix, board.size, 0, board.max_moves, '\0');
         if (minMoves <= board.max_moves) {
             cout << minMoves << endl;
         } else {
