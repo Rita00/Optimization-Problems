@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <numeric>
 
 using namespace std;
 
@@ -113,6 +114,7 @@ bool isSolved(vector<int> board, char move, int size) {
     }
     return true;
 }
+
 
 /**
  * Modifica o vetor do jogo em questão passando a representar o movimento para cima
@@ -269,7 +271,7 @@ inline vector<int> caseRight(vector<int> board, int size) {
 }
 
 
-void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves, char move) {
+void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves, char move, int sum) {
     if (!isSolved(board, move, size)) {
         if (used_moves >= minMoves - 1) {
             return;
@@ -277,28 +279,28 @@ void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves,
         // Check if transformation was effective, if not ignore recursive step
         vector<int> aux = caseLeft(board, size);
         if (aux != board) {
-            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'L');
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'L', sum);
             if (used_moves >= minMoves - 1) {
                 return;
             }
         }
         aux = caseUp(board, size);
         if (aux != board) {
-            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'U');
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'U', sum);
             if (used_moves >= minMoves - 1) {
                 return;
             }
         }
         aux = caseRight(board, size);
         if (aux != board) {
-            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'R');
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'R', sum);
             if (used_moves >= minMoves - 1) {
                 return;
             }
         }
         aux = caseDown(board, size);
         if (aux != board) {
-            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'D');
+            depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'D', sum);
         }
     } else {
         if (minMoves > used_moves) {
@@ -350,7 +352,12 @@ int main() {
     vector<Board> boards = getInput(n);
     for (auto board : boards) {
         minMoves = board.max_moves + 1;
-        depthFirstSearch(board.matrix, board.size, 0, board.max_moves, '\0');
+        int sum = accumulate(board.matrix.begin(), board.matrix.end(), 0);
+        if ((sum & (sum - 1)) != 0) {
+            cout << "no solution" << endl;
+            continue;
+        }
+        depthFirstSearch(board.matrix, board.size, 0, board.max_moves, '\0', sum);
         if (minMoves <= board.max_moves) {
             cout << minMoves << endl;
         } else {
