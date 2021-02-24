@@ -51,14 +51,14 @@ vector<Board> getInput(int n) {
     return boards;
 }
 
-/*void printMatrix(vector<int> board, int size) {
+void printMatrix(vector<int> board, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             cout << board[i * size + j] << " ";
         }
         cout << endl;
     }
-}*/
+}
 
 /**
  * Verfifica se o jogo está resolvido contando o numero de 0's é igual ao tamanho da linha/coluna ao quadrado menos 1
@@ -145,19 +145,33 @@ inline void solveArray(int *array, int size) {
  * @param size numero de linhas/colunas do tabuleiro
  */
 inline vector<int> caseUp(vector<int> board, int size) {
-    int current, aux;
-    int arrayAux[size];
     for (int i = 0; i < size; i++) {
-        aux = 0;
-        fill(arrayAux, arrayAux + size, 0);
-        for (int j = 0; j < size; j++) {
-            current = board[j * size + i];
-            if (current)
-                arrayAux[aux++] = current;
+        int current = 0, next = 1, write = 0;
+        while (next < size) {
+            if (!board[current * size + i]) {
+                current++;
+                next++;
+            } else if (!board[next * size + i]) {
+                next++;
+            } else if (board[current * size + i] == board[next * size + i]) {
+                board[write * size + i] = board[current * size + i] << 1;
+                write++;
+                current = next + 1;
+                next += 2;
+            } else {
+                board[write * size + i] = board[current * size + i];
+                current = next;
+                next++;
+                write++;
+            }
         }
-        solveArray(arrayAux, size);
-        for (int j = size - 1; j >= 0; j--) {
-            board[j * size + i] = arrayAux[j];
+        if (current < size) {
+            board[write * size + i] = board[current * size + i];
+            write++;
+        }
+        while (write < size) {
+            board[write * size + i] = 0;
+            write++;
         }
     }
     return board;
@@ -169,20 +183,33 @@ inline vector<int> caseUp(vector<int> board, int size) {
  * @param size numero de linhas/colunas do tabuleiro
  */
 inline vector<int> caseDown(vector<int> board, int size) {
-    int current, aux;
-    int arrayAux[size];
     for (int i = 0; i < size; i++) {
-        aux = 0;
-        fill(arrayAux, arrayAux + size, 0);
-
-        for (int j = size - 1; j >= 0; j--) {
-            current = board[j * size + i];
-            if (current)
-                arrayAux[aux++] = current;
+        int current = size - 1, next = size - 2, write = size - 1;
+        while (next >= 0) {
+            if (!board[current * size + i]) {
+                current--;
+                next--;
+            } else if (!board[next * size + i]) {
+                next--;
+            } else if (board[current * size + i] == board[next * size + i]) {
+                board[write * size + i] = board[current * size + i] << 1;
+                write--;
+                current = next - 1;
+                next -= 2;
+            } else {
+                board[write * size + i] = board[current * size + i];
+                current = next;
+                next--;
+                write--;
+            }
         }
-        solveArray(arrayAux, size);
-        for (int j = 0; j < size; j++) {
-            board[j * size + i] = arrayAux[size - j - 1];
+        if (current >= 0) {
+            board[write * size + i] = board[current * size + i];
+            write--;
+        }
+        while (write >= 0) {
+            board[write * size + i] = 0;
+            write--;
         }
     }
     return board;
@@ -194,20 +221,34 @@ inline vector<int> caseDown(vector<int> board, int size) {
  * @param size numero de linhas/colunas do tabuleiro
  */
 inline vector<int> caseLeft(vector<int> board, int size) {
-    int current, aux;
-    int arrayAux[size];
     for (int i = 0; i < size; i++) {
-        aux = 0;
-        fill(arrayAux, arrayAux + size, 0);
-        for (int j = 0; j < size; j++) {
-            current = board[i * size + j];
-            if (current) {
-                arrayAux[aux++] = current;
+        int current = 0, next = 1, write = 0;
+        int line = i * size;
+        while (next < size) {
+            if (!board[line + current]) {
+                current++;
+                next++;
+            } else if (!board[line + next]) {
+                next++;
+            } else if (board[line + current] == board[line + next]) {
+                board[line + write] = board[line + current] << 1;
+                write++;
+                current = next + 1;
+                next += 2;
+            } else {
+                board[line + write] = board[line + current];
+                current = next;
+                next++;
+                write++;
             }
         }
-        solveArray(arrayAux, size);
-        for (int j = 0; j < size; j++) {
-            board[i * size + j] = arrayAux[j];
+        if (current < size) {
+            board[line + write] = board[line + current];
+            write++;
+        }
+        while (write < size) {
+            board[line + write] = 0;
+            write++;
         }
     }
     return board;
@@ -219,20 +260,34 @@ inline vector<int> caseLeft(vector<int> board, int size) {
  * @param size numero de linhas/colunas do tabuleiro
  */
 inline vector<int> caseRight(vector<int> board, int size) {
-    int current, aux;
-    int arrayAux[size];
     for (int i = 0; i < size; i++) {
-        aux = 0;
-        fill(arrayAux, arrayAux + size, 0);
-        for (int j = size - 1; j >= 0; j--) {
-            current = board[i * size + j];
-            if (current) {
-                arrayAux[aux++] = current;
+        int current = size - 1, next = size - 2, write = size - 1;
+        int line = i * size;
+        while (next >= 0) {
+            if (!board[line + current]) {
+                current--;
+                next--;
+            } else if (!board[line + next]) {
+                next--;
+            } else if (board[line + current] == board[line + next]) {
+                board[line + write] = board[line + current] << 1;
+                write--;
+                current = next - 1;
+                next -= 2;
+            } else {
+                board[line + write] = board[line + current];
+                current = next;
+                next--;
+                write--;
             }
         }
-        solveArray(arrayAux, size);
-        for (int j = size - 1; j >= 0; j--) {
-            board[i * size + j] = arrayAux[size - j - 1];
+        if (current >= 0) {
+            board[line + write] = board[line + current];
+            write--;
+        }
+        while (write >= 0) {
+            board[line + write] = 0;
+            write--;
         }
     }
     return board;
