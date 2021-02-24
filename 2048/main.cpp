@@ -66,13 +66,45 @@ vector<Board> getInput(int n) {
  * @param size tamanho do array
  * @return booleano que responde se o jogo está resolvido
  */
-bool isSolved(vector<int> board) {
+bool isSolved(vector<int> board,int size) {
     int cnt = 0;
-    for (int i : board) {
-        if (i != 0) cnt++;
+    //115PTS
+    for (int b : board) {
+        if (b != 0) cnt++;
         if (cnt > 1) return false;
     }
     return true;
+    /*
+    //75PTS
+    for (auto it=board.cbegin()+1; it<board.cbegin()+size-1; it++) {
+        if (*it != 0) cnt++;
+    }
+    for (auto it=board.cend()-size+1; it<board.cend()-1; it++) {
+        if (*it != 0) cnt++;
+    }
+    for (auto it=board.cbegin(); it<board.cend(); it+=size) {
+        if (*it != 0) cnt++;
+    }
+    for (auto it=board.cbegin()+size-1; it<board.cend(); it+=size) {
+        if (*it != 0) cnt++;
+    }
+    if (cnt > 1) return false;
+
+    //75PTS
+    for (int i=0;i<size;i++) {
+        //coluna da esquerda
+        if (board[i*size] != 0) cnt++;
+        //coluna da direita
+        if (board[i*size+(size-1)] != 0) cnt++;
+        //para nao verificar elementos já percorridos (efetuar so um if para as duas instrucoes)
+        if(i>0 && i<size-1){
+            //linha de cima (sem o primeiro e ultimo elemento que já foram verificados)
+            if (board[i] != 0) cnt++;
+            //linha de baixo (sem o primeiro e ultimo elemento que já foram verificados)
+            if (board[i+size*(size-1)] != 0) cnt++;
+        }
+        if (cnt > 1) return false;
+    } */
 }
 
 /**
@@ -209,7 +241,7 @@ inline vector<int> caseRight(vector<int> board, int size) {
 int minMoves;
 
 void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves) {
-    if (!isSolved(board)) {
+    if (!isSolved(board,size)) {
         if (used_moves >= minMoves - 1) {
             return;
         }
@@ -306,4 +338,30 @@ EXAMPLE OUTPUT
 no solution
 4
  
+*/
+/*
+int main() {
+    vector<int>::iterator it;
+    int size=4;
+    vector<int> board = {0,1,2,3,
+                        4,5,6,7,
+                        8,9,10,11,
+                        12,13,14,15};
+    for (it=board.begin()+1; it<board.begin()+size-1; it++) {
+        cout << *it <<endl;
+    }
+    cout <<endl;
+    for (it=board.end()-size+1; it<board.end()-1; it++) {
+        cout << *it <<endl;
+    }
+    cout <<endl;
+    for (it=board.begin(); it<board.end(); it+=size) {
+        cout << *it <<endl;
+    }
+    cout <<endl;
+    for (it=board.begin()+size-1; it<board.end(); it+=size) {
+        cout << *it <<endl;
+    }
+    cout <<endl;
+}
 */
