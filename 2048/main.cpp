@@ -9,24 +9,24 @@
 using namespace std;
 
 typedef struct Board {
-    int size{};
-    int max_moves{};
-    vector<int> matrix;
+    uint16_t size{};
+    int16_t max_moves{};
+    vector<uint16_t> matrix;
 } Board;
 
-int minMoves;
+int16_t minMoves;
 
 /**
  * Permite obter o vetor que representa o tabuleiro do stdin
  * @param size numero de linhas/colunas do tabuleiro
  * @return vetor com o tabuleiro
  */
-vector<int> getMatrix(int size) {
-    vector<int> vect;
-    int total_size = size * size;
+vector<uint16_t> getMatrix(uint16_t size) {
+    vector<uint16_t> vect;
+    uint16_t total_size = size * size;
     vect.reserve(total_size);
-    int aux;
-    for (int i = 0; i < total_size; i++) {
+    int16_t aux;
+    for (int16_t i = 0; i < total_size; i++) {
         cin >> aux;
         vect.push_back(aux);
     }
@@ -38,12 +38,12 @@ vector<int> getMatrix(int size) {
  * @param n numero de tabuleiros
  * @return vetor com os tabuleiros
  */
-vector<Board> getInput(int n) {
+vector<Board> getInput(uint16_t n) {
     vector<Board> boards;
     boards.reserve(n);
     Board aux;
-    int size, moves;
-    for (int i = 0; i < n; i++) {
+    int16_t size, moves;
+    for (int16_t i = 0; i < n; i++) {
         cin >> size >> moves;
         aux.size = size;
         aux.max_moves = moves;
@@ -53,9 +53,9 @@ vector<Board> getInput(int n) {
     return boards;
 }
 
-/*void printMatrix(vector<int> board, int size) {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
+/*void printMatrix(vector<uint16_t> board, int16_t size) {
+    for (int16_t i = 0; i < size; i++) {
+        for (int16_t j = 0; j < size; j++) {
             cout << board[i * size + j] << " ";
         }
         cout << endl;
@@ -68,12 +68,12 @@ vector<Board> getInput(int n) {
  * @param size tamanho do array
  * @return booleano que responde se o jogo está resolvido
  */
-bool isSolved(vector<int> board, char move, int size) {
-    int cnt = 0, num_it;
+bool isSolved(vector<uint16_t> board, unsigned char move, int16_t size) {
+    int16_t cnt = 0, num_it;
     switch (move) {
         case 'L':
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < size; j++) {
+            for (int16_t i = 0; i < 2; i++) {
+                for (int16_t j = 0; j < size; j++) {
                     if (board[j * size + i] != 0) cnt++;
                     if (cnt > 1)
                         return false;
@@ -81,7 +81,7 @@ bool isSolved(vector<int> board, char move, int size) {
             }
             break;
         case 'U':
-            for (int i = 0; i <= size * 2; i++) {
+            for (int16_t i = 0; i <= size * 2; i++) {
                 if (board[i] != 0) cnt++;
                 if (cnt > 1)
                     return false;
@@ -89,15 +89,15 @@ bool isSolved(vector<int> board, char move, int size) {
             break;
         case 'D':
             num_it = (size * size - 1) - (size * 2);
-            for (int i = size * size - 1; i >= num_it; i--) {
+            for (int16_t i = size * size - 1; i >= num_it; i--) {
                 if (board[i] != 0) cnt++;
                 if (cnt > 1)
                     return false;
             }
             break;
         case 'R':
-            for (int i = size - 1; i >= size - 2; i--) {
-                for (int j = 0; j < size; j++) {
+            for (int16_t i = size - 1; i >= size - 2; i--) {
+                for (int16_t j = 0; j < size; j++) {
                     if (board[j * size + i] != 0) cnt++;
                     if (cnt > 1)
                         return false;
@@ -105,7 +105,7 @@ bool isSolved(vector<int> board, char move, int size) {
             }
             break;
         default:
-            for (int i : board) {
+            for (int16_t i : board) {
                 if (i != 0) cnt++;
                 if (cnt > 1) return false;
             }
@@ -119,9 +119,9 @@ bool isSolved(vector<int> board, char move, int size) {
  * @param board vetor de um determinado jogo/tabuleiro
  * @param size numero de linhas/colunas do tabuleiro
  */
-inline vector<int> caseUp(vector<int> board, int size) {
-    for (int i = 0; i < size; i++) {
-        int current = 0, next = 1, write = 0;
+inline vector<uint16_t> caseUp(vector<uint16_t> board, int16_t size) {
+    for (int16_t i = 0; i < size; i++) {
+        int16_t current = 0, next = 1, write = 0;
         while (next < size) {
             if (!board[current * size + i]) {
                 current++;
@@ -157,9 +157,9 @@ inline vector<int> caseUp(vector<int> board, int size) {
  * @param board vetor de um determinado jogo/tabuleiro
  * @param size numero de linhas/colunas do tabuleiro
  */
-inline vector<int> caseDown(vector<int> board, int size) {
-    for (int i = 0; i < size; i++) {
-        int current = size - 1, next = size - 2, write = size - 1;
+inline vector<uint16_t> caseDown(vector<uint16_t> board, int16_t size) {
+    for (int16_t i = 0; i < size; i++) {
+        int16_t current = size - 1, next = size - 2, write = size - 1;
         while (next >= 0) {
             if (!board[current * size + i]) {
                 current--;
@@ -195,10 +195,10 @@ inline vector<int> caseDown(vector<int> board, int size) {
  * @param board vetor de um determinado jogo/tabuleiro
  * @param size numero de linhas/colunas do tabuleiro
  */
-inline vector<int> caseLeft(vector<int> board, int size) {
-    for (int i = 0; i < size; i++) {
-        int current = 0, next = 1, write = 0;
-        int line = i * size;
+inline vector<uint16_t> caseLeft(vector<uint16_t> board, int16_t size) {
+    for (int16_t i = 0; i < size; i++) {
+        int16_t current = 0, next = 1, write = 0;
+        int16_t line = i * size;
         while (next < size) {
             if (!board[line + current]) {
                 current++;
@@ -234,10 +234,10 @@ inline vector<int> caseLeft(vector<int> board, int size) {
  * @param board vetor de um determinado jogo/tabuleiro
  * @param size numero de linhas/colunas do tabuleiro
  */
-inline vector<int> caseRight(vector<int> board, int size) {
-    for (int i = 0; i < size; i++) {
-        int current = size - 1, next = size - 2, write = size - 1;
-        int line = i * size;
+inline vector<uint16_t> caseRight(vector<uint16_t> board, int16_t size) {
+    for (int16_t i = 0; i < size; i++) {
+        int16_t current = size - 1, next = size - 2, write = size - 1;
+        int16_t line = i * size;
         while (next >= 0) {
             if (!board[line + current]) {
                 current--;
@@ -269,13 +269,13 @@ inline vector<int> caseRight(vector<int> board, int size) {
 }
 
 
-void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves, char move) {
+void depthFirstSearch(vector<uint16_t> board, int16_t size, int16_t used_moves, int16_t maxMoves, unsigned char move) {
     if (!isSolved(board, move, size)) {
         if (used_moves >= minMoves - 1) {
             return;
         }
         // Check if transformation was effective, if not ignore recursive step
-        vector<int> aux = caseLeft(board, size);
+        vector<uint16_t> aux = caseLeft(board, size);
         if (aux != board) {
             depthFirstSearch(aux, size, used_moves + 1, maxMoves, 'L');
             if (used_moves >= minMoves - 1) {
@@ -308,8 +308,8 @@ void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves,
     }
 }
 
-/*void breadthFirstSearch(vector<int> board, int size) {
-    vector<vector<int>> boards;
+/*void breadthFirstSearch(vector<uint16_t> board, int16_t size) {
+    vector<vector<uint16_t>> boards;
     minMoves=0;
     if(!isSolved(board)){
         boards.push_back(caseLeft(board, size));
@@ -319,7 +319,7 @@ void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves,
         minMoves++;
         while(!boards.empty()){
             boards.erase(boards.begin());
-            vector<vector<int>> aux = boards;
+            vector<vector<uint16_t>> aux = boards;
             for(auto b : aux){
                 if(!isSolved(b)){
                     boards.push_back(caseLeft(b, size));
@@ -344,7 +344,7 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     //get number of boards
-    int n;
+    uint16_t n;
     cin >> n;
     //get all boards
     vector<Board> boards = getInput(n);
@@ -358,7 +358,7 @@ int main() {
         }
         /*
         breadthFirstSearch(board.matrix, board.size);
-        int m = (int)(log2(minMoves)/log2(4));
+        int16_t m = (int16_t)(log2(minMoves)/log2(4));
         if (m <= board.max_moves) {
             cout << m << endl;
         } else {
