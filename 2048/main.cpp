@@ -58,7 +58,7 @@ vector<Board> getInput(uint16_t n) {
         for (int16_t j = 0; j < size; j++) {
             cout << board[i * size + j] << " ";
         }
-        cout << endl;
+        cout << '\n';
     }
 }*/
 
@@ -352,17 +352,17 @@ int main() {
         minMoves = board.max_moves + 1;
         depthFirstSearch(board.matrix, board.size, 0, board.max_moves, '\0');
         if (minMoves <= board.max_moves) {
-            cout << minMoves << endl;
+            cout << minMoves << '\n';
         } else {
-            cout << "no solution" << endl;
+            cout << "no solution" << '\n';
         }
         /*
         breadthFirstSearch(board.matrix, board.size);
         int16_t m = (int16_t)(log2(minMoves)/log2(4));
         if (m <= board.max_moves) {
-            cout << m << endl;
+            cout << m << '\n';
         } else {
-            cout << "no solution" << endl;
+            cout << "no solution" << '\n';
         }
         */
     }
