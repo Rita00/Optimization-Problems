@@ -2,6 +2,8 @@
  * @author Ana Rita Rodrigues -  2018284515
  * @author Dylan Gonçalves Perdigão - 2018233092
  */
+#include <algorithm>
+#include <math.h>
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -13,6 +15,8 @@ typedef struct Board {
     int max_moves{};
     vector<int> matrix;
 } Board;
+
+int minMoves;
 
 /**
  * Permite obter o vetor que representa o tabuleiro do stdin
@@ -298,7 +302,6 @@ inline vector<int> caseRight(vector<int> board, int size) {
     return board;
 }
 
-int minMoves;
 
 void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves, char move) {
     if (!isSolved(board, move, size)) {
@@ -339,6 +342,37 @@ void depthFirstSearch(vector<int> board, int size, int used_moves, int maxMoves,
     }
 }
 
+void breadthFirstSearch(vector<int> board, int size) {
+    vector<vector<int>> boards;
+    minMoves=0;
+    if(!isSolved(board)){
+        boards.push_back(caseLeft(board, size));
+        boards.push_back(caseUp(board, size));
+        boards.push_back(caseRight(board, size));
+        boards.push_back(caseDown(board, size));
+        minMoves++;
+        while(!boards.empty()){
+            boards.erase(boards.begin());
+            vector<vector<int>> aux = boards;
+            for(auto b : aux){
+                if(!isSolved(b)){
+                    boards.push_back(caseLeft(b, size));
+                    boards.push_back(caseUp(b, size));
+                    boards.push_back(caseRight(b, size));
+                    boards.push_back(caseDown(b, size));
+                }else{
+                    return;
+                }
+                minMoves++;
+            }
+        }
+        return;
+    }else{
+        return;
+    }
+}
+
+
 int main() {
     //faster with this lines
     ios_base::sync_with_stdio(false);
@@ -356,15 +390,15 @@ int main() {
         } else {
             cout << "no solution" << endl;
         }
-        //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
-
-        //cout << "=========Board===============" << endl;
-        //printMatrix(board.vector, board.size);
-
-        //breadthFirstSearch(board.vector, board.size, board.max_moves, moves);
-        //cout << "---------------------------" << endl;
-        //printMatrix(board.vector, board.size);
-        //res(board.vector, board.size, board.max_moves);
+        /*
+        breadthFirstSearch(board.matrix, board.size);
+        int m = (int)(log2(minMoves)/log2(4));
+        if (m <= board.max_moves) {
+            cout << m << endl;
+        } else {
+            cout << "no solution" << endl;
+        }
+        */
     }
     return 0;
 }
