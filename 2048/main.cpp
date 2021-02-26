@@ -54,68 +54,6 @@ vector<Board> getInput(int n) {
     return boards;
 }
 
-/*void printMatrix(vector<int> board, int size) {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            cout << board[i * size + j] << " ";
-        }
-        cout << endl;
-    }
-}*/
-
-/**
- * Verfifica se o jogo está resolvido contando o numero de 0's é igual ao tamanho da linha/coluna ao quadrado menos 1
- * @param board linha/coluna do vetor que representa a matriz
- * @param size tamanho do array
- * @return booleano que responde se o jogo está resolvido
- */
-/*bool isSolved(vector<int> board, char move, int size) {
-    int cnt = 0, num_it;
-    switch (move) {
-        case 'L':
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (board[j * size + i] != 0) cnt++;
-                    if (cnt > 1)
-                        return false;
-                }
-            }
-            break;
-        case 'U':
-            for (int i = 0; i <= size * 2; i++) {
-                if (board[i] != 0) cnt++;
-                if (cnt > 1)
-                    return false;
-            }
-            break;
-        case 'D':
-            num_it = (size * size - 1) - (size * 2);
-            for (int i = size * size - 1; i >= num_it; i--) {
-                if (board[i] != 0) cnt++;
-                if (cnt > 1)
-                    return false;
-            }
-            break;
-        case 'R':
-            for (int i = size - 1; i >= size - 2; i--) {
-                for (int j = 0; j < size; j++) {
-                    if (board[j * size + i] != 0) cnt++;
-                    if (cnt > 1)
-                        return false;
-                }
-            }
-            break;
-        default:
-            for (int i : board) {
-                if (i != 0) cnt++;
-                if (cnt > 1) return false;
-            }
-            break;
-    }
-    return true;
-}*/
-
-
 /**
  * Modifica o vetor do jogo em questão passando a representar o movimento para cima
  * @param board vetor de um determinado jogo/tabuleiro
@@ -351,15 +289,6 @@ int main() {
         } else {
             cout << "no solution" << endl;
         }
-        /*
-        breadthFirstSearch(board.matrix, board.size);
-        int m = (int)(log2(minMoves)/log2(4));
-        if (m <= board.max_moves) {
-            cout << m << endl;
-        } else {
-            cout << "no solution" << endl;
-        }
-        */
     }
     return 0;
 }
