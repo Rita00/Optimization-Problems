@@ -7,9 +7,6 @@
 
 This sliding operation is applied iteratively, tile by tile, starting from the tiles closer to the target wall and advancing to the tiles farther away. This means that if the player makes a slide to the right direction in a row with the tiles [2,2,2], the resulting tiles will be [2, 4]. On contrary, if the play is a slide to the left direction, then the result will be [4, 2]
 
-The following image provides an example for each type of slide. For each case, on the left is the board state before the slide and on the right its state after the slide:
-
-
 In the original version of the game, a new tile of value 2 or 4 appears on an empty space of the board after every play (a slide movement). However, in this version, no new tile appears. Also, in the original version the square board is 4x4, and in our version the square board can be of different sizes.
 
 Your objective is to identify the minimum number of plays that merge all tiles into one. A maximum number of plays allowed is provided. If it is not possible to clear the board with that number of plays, you must report no solution.
