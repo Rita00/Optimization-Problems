@@ -286,9 +286,9 @@ inline vector<int> caseRight(vector<int> board, int size, int used_moves, int su
     return board;
 }
 
-int minimum_positive(vector<int> board, int min){
-    for(auto x: board){
-        if(x > 0 && x < min){
+int minimum_positive(vector<int> board, int min) {
+    for (auto x: board) {
+        if (x > 0 && x < min) {
             min = x;
         }
     }
