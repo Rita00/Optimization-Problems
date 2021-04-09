@@ -20,7 +20,13 @@ int mod_sub(int a, int b, int mod) {
 
 
 int main() {
-    int num_blocks, block_h, max_H;
+    int test_cases, num_blocks, block_h, max_H;
+    cin >> test_cases;
+    for (int i = 0; i < test_cases; i++) {
+        cin >> num_blocks;
+        cin >> block_h;
+        cin >> max_H;
+    }
 
     return 0;
 }
