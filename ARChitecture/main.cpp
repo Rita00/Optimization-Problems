@@ -6,8 +6,21 @@
 
 using namespace std;
 
+int mod_abs(int a, int mod) {
+    return ((a % mod) + mod) % mod;
+}
+
+int mod_add(int a, int b, int mod) {
+    return (mod_abs(a, mod) + mod_abs(b, mod)) % mod;
+}
+
+int mod_sub(int a, int b, int mod) {
+    return mod_add(a, -b, mod);
+}
+
+
 int main() {
-    int num_legos, h, max_H;
+    int num_blocks, block_h, max_H;
 
     return 0;
 }
