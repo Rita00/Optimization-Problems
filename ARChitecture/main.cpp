@@ -3,11 +3,9 @@
  * @author Dylan Gonçalves Perdigão - 2018233092
  */
 #include <iostream>
+#include <vector>
 
 using namespace std;
-
-int increasingState;
-int decreasingState;
 
 int mod_abs(int a, int mod) {
     return ((a % mod) + mod) % mod;
@@ -21,11 +19,38 @@ int mod_sub(int a, int b, int mod) {
     return mod_add(a, -b, mod);
 }
 
-int architecture(int num_blocks, int block_h, int max_H){
-    increasingState=0;
-    decreasingState=0;
+int architecture(int width, int height, int maxHeight){
+    //contage,
+    int count=0;
+    //contagem de crescimentos e descrescimentos do arco (para ser valido tem de crescer e descrescer 1 vez)
+    int increasingStatus=0;
+    int decreasingStatus=0;
+    //boleanos para saber se está a crescer
+    bool isIncreasing=false;
     
-    return 0;
+    for(int x=0; x<width; x++){
+        int previousHeight=0;
+        for(int y=height;y<=maxHeight;y++){
+            for(int h=0;h<height; h++){
+                if(y+h>maxHeight){
+                    break;
+                }
+                if(previousHeight<y+h and not isIncreasing){
+                    increasingStatus++;
+                    isIncreasing=true;
+                }
+                if(previousHeight>y+h and isIncreasing){
+                    decreasingStatus++;
+                    isIncreasing=false;
+                }
+                if(increasingStatus==1 and decreasingStatus==1){
+                    count++;
+                }
+                previousHeight=y+h;
+            }
+        }
+    }
+    return count;
 }
 
 int main() {
@@ -48,4 +73,30 @@ int main() {
  * 3- O iº bloco deve "tocar" nos seus vizinhos
  * 4- Os valores de hi devem ser monotonicamnete crescentes, até um certo bloco e decrescescer novamente
  * 5- Dois blocos consecutivos não podem ter o mesmo valor de hi (a mesma altura)
+ */
+
+/*
+INPUT
+------
+7
+3 3 3
+3 3 4
+3 3 5
+3 3 6
+4 3 7
+5 5 10
+8 4 30
+
+ 
+OUTPUT
+------
+0
+1
+2
+2
+4
+54
+819
+ 
+
  */
