@@ -21,10 +21,10 @@ int mod_sub(int a, int b, int mod) {
     return mod_add(a, -b, mod);
 }
 
-int architecture(int num_blocks, int block_h, int max_H){
-    increasingState=0;
-    decreasingState=0;
-    
+int architecture(int num_blocks, int block_h, int max_H) {
+    increasingState = 0;
+    decreasingState = 0;
+
     return 0;
 }
 
@@ -35,7 +35,7 @@ int main() {
         cin >> num_blocks;
         cin >> block_h;
         cin >> max_H;
-        cout << architecture(num_blocks,block_h,max_H)%1000000007 << endl;
+        cout << architecture(num_blocks, block_h, max_H) % 1000000007 << endl;
     }
 
     return 0;
