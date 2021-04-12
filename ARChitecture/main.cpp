@@ -22,57 +22,51 @@ int mod_sub(int a, int b, int mod) {
 
 int f(int n, int h, int block_h, vector<vector<int>> &matrix) {
     int soma = 0;
-    if (h < block_h || n == 0)
-        return 0;
     if (matrix[n][h] != -1)
         return matrix[n][h];
-    if (n == 1 && h == block_h)
-        return 1;
-    for (int i = 1; i < block_h; i++) {
-        soma += f(n - 1, h - i, block_h, matrix);
+    if (h < block_h || n == 0) {
+        soma = 0;
+    } else if (n == 1 && h == block_h) {
+        soma = 1;
+    } else {
+        for (int i = 1; i < block_h; i++) {
+            soma += f(n - 1, h - i, block_h, matrix);
+        }
     }
+
     matrix[n][h] = soma;
     return soma;
 }
 
 int architecture2(int num_blocks, int block_h, int max_H) {
     vector<vector<int>> matrix;
-    vector<int> solutions_per_numBlocks;
-    solutions_per_numBlocks.resize(num_blocks);
 
     matrix.resize(num_blocks, vector<int>(max_H + 1, -1));
-    for (int i = 1; i < num_blocks; i++) {
-        int h_max = block_h + ((i - 1) * (block_h - 1));
-        if (h_max > max_H) h_max = max_H;
-        for (int j = block_h + i - 1; j <= h_max; j++) {
-            matrix[i][j] = f(i, j, block_h, matrix);
-            //printf("%d\t%d\n", i, j);
+    int total = 0;
+    int max_col = min(max_H, block_h + ((num_blocks / 2 + num_blocks % 2) * (block_h - 1)));
+    for (int linha = 1; linha < num_blocks; linha++) {
+        for (int coluna = block_h + linha - 1; coluna <= max_col; coluna++) {
+            int lc = f(linha, coluna, block_h, matrix);
+            if (lc == 0)
+                continue;
+            int soma = 0;
+            int min_blocks = (coluna - block_h) / (block_h - 1);
+            for (int i = 1; i < block_h; i++) {
+                for (int l = min_blocks; l <= num_blocks - linha; l++) {
+                    //printf("(%d, %d) * (%d, %d)\n", l, coluna - i, linha, coluna);
+                    soma += f(l, coluna - i, block_h, matrix);
+                }
+            }
+            total += soma * lc;
         }
     }
     for (int i = 0; i < num_blocks; i++) {
         for (int j = 0; j < max_H + 1; j++) {
             if (matrix[i][j] == -1)
                 matrix[i][j] = 0;
-            //printf("%d\t", matrix[i][j]);
+            printf("%d\t", matrix[i][j]);
         }
-        //printf("\n");
-    }
-    vector<int> soma_colunas;
-    soma_colunas.resize(max_H + 1);
-    int total = 0;
-    for (int coluna = block_h; coluna <= min(max_H, block_h + ((num_blocks / 2 + num_blocks % 2) * (block_h - 1))); coluna++) {
-        for (int linha = 1; linha < num_blocks; linha++) {
-            for (int i = 1; i < block_h; i++) {
-                int min_blocks = (coluna - block_h) / (block_h - 1) ;
-                for (int l = min_blocks; l <= num_blocks - linha; l++) {
-                    //if (matrix[linha][coluna] < 0) break;
-                    if (matrix[linha][coluna] != 0 && f(l, coluna - i, block_h, matrix) != 0) {
-                        //printf("(%d, %d) * (%d, %d)\n", l, coluna - i, linha, coluna);
-                        total += f(l, coluna - i, block_h, matrix) * matrix[linha][coluna];
-                    }
-                }
-            }
-        }
+        printf("\n");
     }
     return total;
 }
