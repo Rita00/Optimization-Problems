@@ -4,9 +4,19 @@
  */
 #include <iostream>
 #include <vector>
-#include <chrono>
 
 using namespace std;
+
+int total;
+int n, blockHeight, maxHeight;
+
+void printVector(vector<int> h){
+    cout << "[\t";
+    for(int val : h){
+        cout << val << "\t";
+    }
+    cout << "]" << endl;
+}
 
 int mod_abs(int a, int mod) {
     return ((a % mod) + mod) % mod;
@@ -20,81 +30,62 @@ int mod_sub(int a, int b, int mod) {
     return mod_add(a, -b, mod);
 }
 
-int f(int n, int h, int block_h, vector<vector<int>> &matrix) {
-    int soma = 0;
-    if (h < block_h || n == 0)
-        return 0;
-    if (matrix[n][h] != -1)
-        return matrix[n][h];
-    if (n == 1 && h == block_h)
-        return 1;
-    for (int i = 1; i < block_h; i++) {
-        soma += f(n - 1, h - i, block_h, matrix);
+void architecture(vector<int> h,int k, int prevHeight, bool isDecreasing) {
+    //Parar
+    if(k>=n){
+        return;
     }
-    matrix[n][h] = soma;
-    return soma;
-}
-
-int architecture2(int num_blocks, int block_h, int max_H) {
-    vector<vector<int>> matrix;
-    vector<int> solutions_per_numBlocks;
-    solutions_per_numBlocks.resize(num_blocks);
-
-    matrix.resize(num_blocks, vector<int>(max_H + 1, -1));
-    for (int i = 1; i < num_blocks; i++) {
-        int h_max = block_h + ((i - 1) * (block_h - 1));
-        if (h_max > max_H) h_max = max_H;
-        for (int j = block_h + i - 1; j <= h_max; j++) {
-            matrix[i][j] = f(i, j, block_h, matrix);
-            //printf("%d\t%d\n", i, j);
-        }
-    }
-    for (int i = 0; i < num_blocks; i++) {
-        for (int j = 0; j < max_H + 1; j++) {
-            if (matrix[i][j] == -1)
-                matrix[i][j] = 0;
-            //printf("%d\t", matrix[i][j]);
-        }
-        //printf("\n");
-    }
-    vector<int> soma_colunas;
-    soma_colunas.resize(max_H + 1);
-    int total = 0;
-    for (int coluna = block_h; coluna <= min(max_H, block_h + ((num_blocks / 2 + num_blocks % 2) * (block_h - 1))); coluna++) {
-        for (int linha = 1; linha < num_blocks; linha++) {
-            for (int i = 1; i < block_h; i++) {
-                int min_blocks = (coluna - block_h) / (block_h - 1) ;
-                for (int l = min_blocks; l <= num_blocks - linha; l++) {
-                    //if (matrix[linha][coluna] < 0) break;
-                    if (matrix[linha][coluna] != 0 && f(l, coluna - i, block_h, matrix) != 0) {
-                        //printf("(%d, %d) * (%d, %d)\n", l, coluna - i, linha, coluna);
-                        total += f(l, coluna - i, block_h, matrix) * matrix[linha][coluna];
+    //Rule 3
+    for(int i=prevHeight-blockHeight-1 ; i<prevHeight+blockHeight ; i++){
+        //entre 0 e altura maxima
+        if(0<=h[k-1]+i and h[k-1]+i<=maxHeight-blockHeight){
+            //RULE 1 and 4
+            if( (h[k-1]+i<prevHeight && isDecreasing) || (h[k-1]+i>prevHeight && !isDecreasing)){
+                h.resize(k+1);
+                h[k] = h[k-1]+i;
+                //RULE 2 and increment
+                if(k==n-1){
+                    printVector(h);
+                    if(h[k]==0){
+                        total++;
                     }
+                }else{
+                    //se altura esta a 0 nao vale a pena calcular mais
+                    /*
+                    if(h[k-1]+i==0){
+                        printVector(h);
+                        break;
+                    }
+                     */
                 }
+                architecture(h,k+1, h[k], isDecreasing);
+            }else if(h[k-1]+i<prevHeight && !isDecreasing){
+                isDecreasing=true;
             }
         }
     }
-    return total;
 }
 
 int main() {
-    using std::chrono::high_resolution_clock;
-    using std::chrono::duration_cast;
-    using std::chrono::duration;
-    using std::chrono::milliseconds;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
-    int test_cases, num_blocks, block_h, max_H;
-    auto t1 = high_resolution_clock::now();
+    int test_cases;
     cin >> test_cases;
+    
     for (int i = 0; i < test_cases; i++) {
-        cin >> num_blocks;
-        cin >> block_h;
-        cin >> max_H;
-        cout << architecture2(num_blocks, block_h, max_H) % 1000000007 << endl;
+        cin >> n;
+        cin >> blockHeight;
+        cin >> maxHeight;
+        total=0;
+        if(n>=3){
+            vector<int> h;
+            h.push_back(0);
+            architecture(h,1,h[0],false);
+        }
+        cout << total % 1000000007 << endl;
     }
-    auto t2 = high_resolution_clock::now();
-    auto ms_int = duration_cast<milliseconds>(t2 - t1);
-    std::cout << ms_int.count() << "ms\n";
     return 0;
 }
 
@@ -130,5 +121,38 @@ OUTPUT
 54
 819
  
+Input (Example 2)
+--------------------
+1
+32 3 100
+ 
+ 
+Output (Example 2)
+---------------------
+431655757
+ 
+ 
+Input (Example 3)
+--------------------
+2
+17 29 5899
+70 16 276
+ 
+ 
+Output (Example 3)
+--------------------
 
- */
+162344589
+70718620
+ 
+ 
+ 
+5
+3 3 3
+3 3 4
+3 3 5
+3 3 6
+4 3 7
+ 
+ 
+*/
