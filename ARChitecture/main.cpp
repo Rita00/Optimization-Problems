@@ -31,16 +31,17 @@ int mod_sub(int a, int b, int mod) {
 }
 
 void architecture(vector<int> h,int k, int prevHeight, bool isDecreasing) {
-    //Parar
+    ///Parar
     if(k>=n){
         return;
     }
-    //Rule 3
+    /// Rule 3
     for(int i=prevHeight-blockHeight-1 ; i<prevHeight+blockHeight ; i++){
-        //entre 0 e altura maxima
+        /// entre 0 e altura maxima
         if(0<=h[k-1]+i and h[k-1]+i<=maxHeight-blockHeight){
-            //RULE 1 and 4
-            if( (h[k-1]+i<prevHeight && isDecreasing) || (h[k-1]+i>prevHeight && !isDecreasing)){
+            /// Rule 1 and 4
+            //if( (h[k-1]+i<prevHeight && isDecreasing) || (h[k-1]+i>prevHeight && !isDecreasing)){
+            if(h[k-1]+i!=prevHeight){
                 h.resize(k+1);
                 h[k] = h[k-1]+i;
                 //RULE 2 and increment
@@ -50,7 +51,7 @@ void architecture(vector<int> h,int k, int prevHeight, bool isDecreasing) {
                         total++;
                     }
                 }else{
-                    //se altura esta a 0 nao vale a pena calcular mais
+                    /// se altura esta a 0 nao vale a pena calcular mais
                     /*
                     if(h[k-1]+i==0){
                         printVector(h);
@@ -59,9 +60,11 @@ void architecture(vector<int> h,int k, int prevHeight, bool isDecreasing) {
                      */
                 }
                 architecture(h,k+1, h[k], isDecreasing);
-            }else if(h[k-1]+i<prevHeight && !isDecreasing){
-                isDecreasing=true;
             }
+               /*
+                else if(h[k-1]+i<prevHeight && !isDecreasing){
+                //isDecreasing=true;
+            }*/
         }
     }
 }
