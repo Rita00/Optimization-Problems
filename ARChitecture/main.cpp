@@ -21,18 +21,47 @@ int mod_sub(int a, int b, int mod) {
     return mod_add(a, -b, mod);
 }
 
+int multiply(int a, int b, int mod)
+{
+    int res = 0; // Initialize result
+    a = a % mod;
+    while (b > 0)
+    {
+        // If b is odd, add 'a' to result
+        if (b % 2 == 1)
+            res = (res + a) % mod;
+
+        // Multiply 'a' with 2
+        a = (a * 2) % mod;
+
+        // Divide b by 2
+        b /= 2;
+    }
+
+    // Return result
+    return res % mod;
+}
+
 int f(int n, int h, int block_h, vector<vector<int>> &matrix) {
     int soma = 0;
     if (n == 1 && h == block_h) {
         soma = 1;
-    } else{
+    } else {
+        printf("............................ F %d - %d\n", n, h);
         for (int i = 1; i < block_h; i++) {
+            //int diff = mod_sub(matrix[n-1][h-i], matrix[n-2][h - i], 1000000007);
+            //soma = mod_add(soma, diff, 1000000007);
+            //soma = mod_add(soma, mod_abs(mod_sub(matrix[n - 1][h - i], matrix[n - 2][h - i], 1000000007), 1000000007),1000000007);
             soma = mod_add(soma, mod_sub(matrix[n - 1][h - i], matrix[n - 2][h - i], 1000000007), 1000000007);
+            printf("%d\n", soma);
+            //soma += (matrix[n - 1][h - i] - matrix[n - 2][h - i]);
         }
     }
+    printf("............................ F solo %d - %d\n", n, h);
     soma = mod_add(soma, matrix[n - 1][h], 1000000007);
-
-    matrix[n][h] = mod_abs(soma, 1000000007);
+    printf("solo soma F %d\n", soma);
+    matrix[n][h] = soma;
+    //return soma;
     return matrix[n][h];
 }
 
@@ -59,12 +88,23 @@ int architecture2(int num_blocks, int block_h, int max_H) {
 //            }
             int remaining_blocks = num_blocks - linha;
 
+            printf("............................ Arch soma %d - %d\n", coluna, linha);
             for (int i = 1; i < block_h; i++) {
+                //soma += matrix[remaining_blocks][coluna - i];
                 soma = mod_add(soma, matrix[remaining_blocks][coluna - i], 1000000007);
+                printf("Soma Arch %d\n", soma);
                 //soma += matrix[remaining_blocks][coluna - i] % 1000000007;
             }
-            total = mod_add(total, soma * (lc - matrix[linha - 1][coluna]), 1000000007);
-            total = mod_abs(total, 1000000007);
+            //int diff = mod_sub(lc, matrix[linha - 1][coluna], 1000000007);
+            printf("............................ Arch mul %d - %d\n", coluna, linha);
+            int res = multiply(soma, mod_sub(lc, matrix[linha - 1][coluna], 1000000007), 1000000007);
+            printf("mul Arch %d\n", res);
+            //int res = soma * (lc - matrix[linha - 1][coluna]);
+            //total += res;
+            printf("............................ Arch soma2 %d - %d\n", coluna, linha);
+            total = mod_add(total, res, 1000000007);
+            printf("total Arch %d\n", total);
+            //total = mod_abs(total, 1000000007);
             //total %= 1000000007;
         }
     }
@@ -79,13 +119,13 @@ int architecture2(int num_blocks, int block_h, int max_H) {
 }
 
 int main() {
-    //using std::chrono::high_resolution_clock;
-    //using std::chrono::duration_cast;
-    //using std::chrono::duration;
-    //using std::chrono::milliseconds;
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
 
     int test_cases, num_blocks, block_h, max_H;
-    //auto t1 = high_resolution_clock::now();
+    auto t1 = high_resolution_clock::now();
     cin >> test_cases;
     for (int i = 0; i < test_cases; i++) {
         cin >> num_blocks;
@@ -93,9 +133,9 @@ int main() {
         cin >> max_H;
         cout << architecture2(num_blocks, block_h, max_H) << endl;
     }
-    //auto t2 = high_resolution_clock::now();
-    //auto ms_int = duration_cast<milliseconds>(t2 - t1);
-    //std::cout << ms_int.count() << "ms\n";
+    auto t2 = high_resolution_clock::now();
+    auto ms_int = duration_cast<milliseconds>(t2 - t1);
+    std::cout << ms_int.count() << "ms\n";
     return 0;
 }
 
