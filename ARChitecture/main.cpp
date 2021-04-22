@@ -6,6 +6,7 @@
 #include <vector>
 #include <chrono>
 #include <cmath>
+#include <fstream>
 
 using namespace std;
 
@@ -21,24 +22,17 @@ int mod_sub(int a, int b, int mod) {
     return mod_add(a, -b, mod);
 }
 
-int multiply(int a, int b, int mod)
-{
-    int res = 0; // Initialize result
+int multiply(int a, int b, int mod) {
+    int res = 0;
     a = a % mod;
-    while (b > 0)
-    {
-        // If b is odd, add 'a' to result
+    while (b > 0) {
         if (b % 2 == 1)
             res = (res + a) % mod;
 
-        // Multiply 'a' with 2
         a = (a * 2) % mod;
 
-        // Divide b by 2
         b /= 2;
     }
-
-    // Return result
     return res % mod;
 }
 
@@ -47,21 +41,16 @@ int f(int n, int h, int block_h, vector<vector<int>> &matrix) {
     if (n == 1 && h == block_h) {
         soma = 1;
     } else {
-        printf("............................ F %d - %d\n", n, h);
+        //printf("............................ F %d - %d\n", n, h);
         for (int i = 1; i < block_h; i++) {
-            //int diff = mod_sub(matrix[n-1][h-i], matrix[n-2][h - i], 1000000007);
-            //soma = mod_add(soma, diff, 1000000007);
-            //soma = mod_add(soma, mod_abs(mod_sub(matrix[n - 1][h - i], matrix[n - 2][h - i], 1000000007), 1000000007),1000000007);
             soma = mod_add(soma, mod_sub(matrix[n - 1][h - i], matrix[n - 2][h - i], 1000000007), 1000000007);
-            printf("%d\n", soma);
-            //soma += (matrix[n - 1][h - i] - matrix[n - 2][h - i]);
+            //printf("%d\n", soma);
         }
     }
-    printf("............................ F solo %d - %d\n", n, h);
+    //printf("............................ F solo %d - %d\n", n, h);
     soma = mod_add(soma, matrix[n - 1][h], 1000000007);
-    printf("solo soma F %d\n", soma);
+    //printf("solo soma F %d\n", soma);
     matrix[n][h] = soma;
-    //return soma;
     return matrix[n][h];
 }
 
@@ -73,48 +62,34 @@ int architecture2(int num_blocks, int block_h, int max_H) {
     int max_col = min(max_H, block_h + ((num_blocks / 2 + num_blocks % 2) * (block_h - 1)));
     for (int coluna = block_h; coluna <= max_col; coluna++) {
         int blocks_min = ceil((float) (coluna - block_h) / (float) (block_h - 1) + 1);
-        //int blocks_max = min(num_blocks, coluna - block_h + 1 + 1);
         for (int linha = blocks_min; linha < num_blocks; linha++) {
             int lc = f(linha, coluna, block_h, matrix);
             if (lc == 0)
                 continue;
             int soma = 0;
-            //int min_blocks = (coluna - block_h) / (block_h - 1);
-//            for (int i = 1; i < block_h; i++) {
-//                for (int l = min_blocks; l <= num_blocks - linha; l++) {
-//                    //printf("(%d, %d) * (%d, %d)\n", l, coluna - i, linha, coluna);
-//                    soma += matrix[l][coluna - i];
-//                }
-//            }
-            int remaining_blocks = num_blocks - linha;
 
-            printf("............................ Arch soma %d - %d\n", coluna, linha);
-            for (int i = 1; i < block_h; i++) {
-                //soma += matrix[remaining_blocks][coluna - i];
-                soma = mod_add(soma, matrix[remaining_blocks][coluna - i], 1000000007);
-                printf("Soma Arch %d\n", soma);
-                //soma += matrix[remaining_blocks][coluna - i] % 1000000007;
+            int remaining_blocks = num_blocks - linha;
+            //printf("............................ Arch soma %d - %d\n", coluna, linha);
+            for (int i = 1; coluna - i >= block_h && i < block_h; i++) {
+                int current_ind = matrix[remaining_blocks][coluna - i];
+                //printf("%d - %d\n", remaining_blocks, coluna - i);
+                //printf("%d\n", current_ind);
+                //if (current_ind == 0) continue;
+                soma = mod_add(soma, current_ind, 1000000007);
+                /*if (soma != 0)
+                    printf("Soma Arch ? %d\n", soma);
+                else printf("Soma Arch %d\n", soma);*/
             }
-            //int diff = mod_sub(lc, matrix[linha - 1][coluna], 1000000007);
-            printf("............................ Arch mul %d - %d\n", coluna, linha);
             int res = multiply(soma, mod_sub(lc, matrix[linha - 1][coluna], 1000000007), 1000000007);
-            printf("mul Arch %d\n", res);
-            //int res = soma * (lc - matrix[linha - 1][coluna]);
-            //total += res;
-            printf("............................ Arch soma2 %d - %d\n", coluna, linha);
             total = mod_add(total, res, 1000000007);
-            printf("total Arch %d\n", total);
-            //total = mod_abs(total, 1000000007);
-            //total %= 1000000007;
         }
     }
-//    for (int i = 0; i < num_blocks; i++) {
-//        for (int j = 0; j < max_H + 1; j++) {
-//            printf("%u\t", matrix[i][j]);
-//        }
-//        printf("\n");
-//    }
-    //total %= 1000000007;
+    /*for (int i = 0; i < num_blocks; i++) {
+        for (int j = 0; j < max_H + 1; j++) {
+            printf("%u\t", matrix[i][j]);
+        }
+        printf("\n");
+    }*/
     return total;
 }
 
