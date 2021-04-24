@@ -3,13 +3,15 @@
  * @author Dylan Gonçalves Perdigão - 2018233092
  */
 #include <iostream>
+#include <map>
 #include <vector>
 
-#define DEBUG_MODE false
+#define DEBUG_MODE true
 
 using namespace std;
 
-int total, n, blockHeight, maxHeight;
+int total;
+int n, blockHeight, maxHeight;
 
 void printVector(vector<int> h){
     cout << "[\t";
@@ -47,11 +49,20 @@ bool hasOneLocalMaximum(vector<int> h){
 }
 
 
-void architecture(vector<int> h, int k) {
+void architecture(vector<int> h, int k, bool isIncreasing) {
     ///Parar
     if(k>=n){
         return;
     }
+/*
+    ///Rule 4
+    if(isIncreasing && h[k-1]>h[k]){
+        isIncreasing=false;
+    }
+    if(!isIncreasing && h[k-1]<h[k]){
+        return;
+    }
+  */
     /// Rule 3
     for(int i=h[k-1]-blockHeight+1 ; i<h[k-1]+blockHeight ; i++){
         /// entre 0 e altura maxima
@@ -62,12 +73,14 @@ void architecture(vector<int> h, int k) {
                 h[k] = i;
                 //RULE 2 and increment
                 if(h[k]==0){
-                    if(DEBUG_MODE)printVector(h);
+                    if(DEBUG_MODE){printVector(h);}
+                    //Rule 4
                     if(hasOneLocalMaximum(h)){
                         total++;
                     }
+                    
                 }
-                architecture(h,k+1);
+                architecture(h,k+1,isIncreasing);
             }
         }
     }
@@ -90,9 +103,9 @@ int main() {
         if(n>=3){
             vector<int> h;
             h.resize(1);
-            architecture(h,1);
+            architecture(h,1,true);
         }
-        cout << total % 1000000007 << endl;
+        cout << total%1000000007 << endl;
     }
     return 0;
 }
