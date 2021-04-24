@@ -136,3 +136,14 @@ For each test case you need to output the number of distinct arcs you can build 
 ```
 431655757
 ```
+### Input (Example 3)
+```
+2
+17 29 5899
+70 16 276
+```
+### Output (Example 3)
+```
+162344589
+70718620
+```
