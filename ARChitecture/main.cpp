@@ -6,6 +6,7 @@
 #include <vector>
 #include <chrono>
 #include <cmath>
+#include <fstream>
 
 using namespace std;
 
@@ -21,18 +22,35 @@ int mod_sub(int a, int b, int mod) {
     return mod_add(a, -b, mod);
 }
 
+int multiply(int a, int b, int mod) {
+    int res = 0;
+    a = a % mod;
+    while (b > 0) {
+        if (b % 2 == 1)
+            res = (res + a) % mod;
+
+        a = (a * 2) % mod;
+
+        b /= 2;
+    }
+    return res % mod;
+}
+
 int f(int n, int h, int block_h, vector<vector<int>> &matrix) {
     int soma = 0;
     if (n == 1 && h == block_h) {
         soma = 1;
-    } else{
+    } else {
+        //printf("............................ F %d - %d\n", n, h);
         for (int i = 1; i < block_h; i++) {
             soma = mod_add(soma, mod_sub(matrix[n - 1][h - i], matrix[n - 2][h - i], 1000000007), 1000000007);
+            //printf("%d\n", soma);
         }
     }
+    //printf("............................ F solo %d - %d\n", n, h);
     soma = mod_add(soma, matrix[n - 1][h], 1000000007);
-
-    matrix[n][h] = mod_abs(soma, 1000000007);
+    //printf("solo soma F %d\n", soma);
+    matrix[n][h] = soma;
     return matrix[n][h];
 }
 
@@ -44,48 +62,45 @@ int architecture2(int num_blocks, int block_h, int max_H) {
     int max_col = min(max_H, block_h + ((num_blocks / 2 + num_blocks % 2) * (block_h - 1)));
     for (int coluna = block_h; coluna <= max_col; coluna++) {
         int blocks_min = ceil((float) (coluna - block_h) / (float) (block_h - 1) + 1);
-        //int blocks_max = min(num_blocks, coluna - block_h + 1 + 1);
         for (int linha = blocks_min; linha < num_blocks; linha++) {
             int lc = f(linha, coluna, block_h, matrix);
             if (lc == 0)
                 continue;
             int soma = 0;
-            //int min_blocks = (coluna - block_h) / (block_h - 1);
-//            for (int i = 1; i < block_h; i++) {
-//                for (int l = min_blocks; l <= num_blocks - linha; l++) {
-//                    //printf("(%d, %d) * (%d, %d)\n", l, coluna - i, linha, coluna);
-//                    soma += matrix[l][coluna - i];
-//                }
-//            }
-            int remaining_blocks = num_blocks - linha;
 
-            for (int i = 1; i < block_h; i++) {
-                soma = mod_add(soma, matrix[remaining_blocks][coluna - i], 1000000007);
-                //soma += matrix[remaining_blocks][coluna - i] % 1000000007;
+            int remaining_blocks = num_blocks - linha;
+            //printf("............................ Arch soma %d - %d\n", coluna, linha);
+            for (int i = 1; coluna - i >= block_h && i < block_h; i++) {
+                int current_ind = matrix[remaining_blocks][coluna - i];
+                //printf("%d - %d\n", remaining_blocks, coluna - i);
+                //printf("%d\n", current_ind);
+                //if (current_ind == 0) continue;
+                soma = mod_add(soma, current_ind, 1000000007);
+                /*if (soma != 0)
+                    printf("Soma Arch ? %d\n", soma);
+                else printf("Soma Arch %d\n", soma);*/
             }
-            total = mod_add(total, soma * (lc - matrix[linha - 1][coluna]), 1000000007);
-            total = mod_abs(total, 1000000007);
-            //total %= 1000000007;
+            int res = multiply(soma, mod_sub(lc, matrix[linha - 1][coluna], 1000000007), 1000000007);
+            total = mod_add(total, res, 1000000007);
         }
     }
-//    for (int i = 0; i < num_blocks; i++) {
-//        for (int j = 0; j < max_H + 1; j++) {
-//            printf("%u\t", matrix[i][j]);
-//        }
-//        printf("\n");
-//    }
-    //total %= 1000000007;
+    /*for (int i = 0; i < num_blocks; i++) {
+        for (int j = 0; j < max_H + 1; j++) {
+            printf("%u\t", matrix[i][j]);
+        }
+        printf("\n");
+    }*/
     return total;
 }
 
 int main() {
-    //using std::chrono::high_resolution_clock;
-    //using std::chrono::duration_cast;
-    //using std::chrono::duration;
-    //using std::chrono::milliseconds;
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
 
     int test_cases, num_blocks, block_h, max_H;
-    //auto t1 = high_resolution_clock::now();
+    auto t1 = high_resolution_clock::now();
     cin >> test_cases;
     for (int i = 0; i < test_cases; i++) {
         cin >> num_blocks;
@@ -93,9 +108,9 @@ int main() {
         cin >> max_H;
         cout << architecture2(num_blocks, block_h, max_H) << endl;
     }
-    //auto t2 = high_resolution_clock::now();
-    //auto ms_int = duration_cast<milliseconds>(t2 - t1);
-    //std::cout << ms_int.count() << "ms\n";
+    auto t2 = high_resolution_clock::now();
+    auto ms_int = duration_cast<milliseconds>(t2 - t1);
+    std::cout << ms_int.count() << "ms\n";
     return 0;
 }
 
