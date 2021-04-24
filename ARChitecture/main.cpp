@@ -94,13 +94,16 @@ int architecture2(int num_blocks, int block_h, int max_H) {
 }
 
 int main() {
+    /*
     using std::chrono::high_resolution_clock;
     using std::chrono::duration_cast;
     using std::chrono::duration;
     using std::chrono::milliseconds;
-
-    int test_cases, num_blocks, block_h, max_H;
     auto t1 = high_resolution_clock::now();
+    */
+    
+    
+    int test_cases, num_blocks, block_h, max_H;
     cin >> test_cases;
     for (int i = 0; i < test_cases; i++) {
         cin >> num_blocks;
@@ -108,9 +111,13 @@ int main() {
         cin >> max_H;
         cout << architecture2(num_blocks, block_h, max_H) << endl;
     }
+    
+    
+    /*
     auto t2 = high_resolution_clock::now();
     auto ms_int = duration_cast<milliseconds>(t2 - t1);
     std::cout << ms_int.count() << "ms\n";
+    */
     return 0;
 }
 
@@ -121,4 +128,47 @@ int main() {
  * 3- O iº bloco deve "tocar" nos seus vizinhos
  * 4- Os valores de hi devem ser monotonicamnete crescentes, até um certo bloco e decrescescer novamente
  * 5- Dois blocos consecutivos não podem ter o mesmo valor de hi (a mesma altura)
+ */
+/*
+ #### Input (Example 1)
+ 7
+ 3 3 3
+ 3 3 4
+ 3 3 5
+ 3 3 6
+ 4 3 7
+ 5 5 10
+ 8 4 30
+ 
+ 
+ ### Output (Example 1)
+ 0
+ 1
+ 2
+ 2
+ 4
+ 54
+ 819
+ 
+ 
+ ### Input (Example 2)
+ 1
+ 32 3 100
+ 
+ 
+ ### Output (Example 2)
+ 431655757
+ 
+ 
+ ### Input (Example 3)
+ 2
+ 17 29 5899
+ 70 16 276
+ 
+ 
+ ### Output (Example 3)
+ 162344589
+ 70718620
+ 
+ 
  */
