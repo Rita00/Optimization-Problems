@@ -5,10 +5,11 @@
 #include <iostream>
 #include <vector>
 
+#define DEBUG_MODE false
+
 using namespace std;
 
-int total;
-int n, blockHeight, maxHeight;
+int total, n, blockHeight, maxHeight;
 
 void printVector(vector<int> h){
     cout << "[\t";
@@ -30,50 +31,54 @@ int mod_sub(int a, int b, int mod) {
     return mod_add(a, -b, mod);
 }
 
-void architecture(vector<int> h,int k, int prevHeight, bool isDecreasing) {
+bool hasOneLocalMaximum(vector<int> h){
+    bool isIncreasing=true;
+    int prevVal=-1;
+    for(int val : h){
+        if(isIncreasing && prevVal>val){
+            isIncreasing=false;
+        }
+        if(!isIncreasing && prevVal<val){
+            return false;
+        }
+        prevVal=val;
+    }
+    return true;
+}
+
+
+void architecture(vector<int> h, int k) {
     ///Parar
     if(k>=n){
         return;
     }
     /// Rule 3
-    for(int i=prevHeight-blockHeight-1 ; i<prevHeight+blockHeight ; i++){
+    for(int i=h[k-1]-blockHeight+1 ; i<h[k-1]+blockHeight ; i++){
         /// entre 0 e altura maxima
-        if(0<=h[k-1]+i and h[k-1]+i<=maxHeight-blockHeight){
-            /// Rule 1 and 4
-            //if( (h[k-1]+i<prevHeight && isDecreasing) || (h[k-1]+i>prevHeight && !isDecreasing)){
-            if(h[k-1]+i!=prevHeight){
+        if(0<=i and i<=maxHeight-blockHeight){
+            /// Rule 1
+            if(i != h[k-1]){
                 h.resize(k+1);
-                h[k] = h[k-1]+i;
+                h[k] = i;
                 //RULE 2 and increment
-                if(k==n-1){
-                    printVector(h);
-                    if(h[k]==0){
+                if(h[k]==0){
+                    if(DEBUG_MODE)printVector(h);
+                    if(hasOneLocalMaximum(h)){
                         total++;
                     }
-                }else{
-                    /// se altura esta a 0 nao vale a pena calcular mais
-                    /*
-                    if(h[k-1]+i==0){
-                        printVector(h);
-                        break;
-                    }
-                     */
                 }
-                architecture(h,k+1, h[k], isDecreasing);
+                architecture(h,k+1);
             }
-               /*
-                else if(h[k-1]+i<prevHeight && !isDecreasing){
-                //isDecreasing=true;
-            }*/
         }
     }
+   
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-
+    
     int test_cases;
     cin >> test_cases;
     
@@ -84,8 +89,8 @@ int main() {
         total=0;
         if(n>=3){
             vector<int> h;
-            h.push_back(0);
-            architecture(h,1,h[0],false);
+            h.resize(1);
+            architecture(h,1);
         }
         cout << total % 1000000007 << endl;
     }
@@ -157,5 +162,15 @@ Output (Example 3)
 3 3 6
 4 3 7
  
+ 
+ 
+ 5
+ 3 3 3
+ 3 3 4
+ 3 3 5
+ 3 3 6
+ 4 3 7
+
+  
  
 */
