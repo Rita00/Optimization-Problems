@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 
-#define DEBUG_MODE true
+#define DEBUG_MODE false
 
 using namespace std;
 
@@ -33,37 +33,33 @@ int mod_sub(int a, int b, int mod) {
     return mod_add(a, -b, mod);
 }
 
-bool hasOneLocalMaximum(vector<int> h){
-    bool isIncreasing=true;
-    int prevVal=-1;
-    for(int val : h){
-        if(isIncreasing && prevVal>val){
-            isIncreasing=false;
-        }
-        if(!isIncreasing && prevVal<val){
-            return false;
-        }
-        prevVal=val;
-    }
-    return true;
-}
-
-
-void architecture(vector<int> h, int k, bool isIncreasing) {
+void arcDown(vector<int> h, int k) {
     ///Parar
     if(k>=n){
         return;
     }
-/*
-    ///Rule 4
-    if(isIncreasing && h[k-1]>h[k]){
-        isIncreasing=false;
+    /// Rule 3,4
+    for(int i=h[k-1]-blockHeight+1 ; i<h[k-1] ; i++){
+        /// entre 0 (e o anterior)
+        if(0<=i){
+            h.resize(k+1);
+            h[k] = i;
+            //RULE 2 and increment
+            if(h[k]==0){
+                if(DEBUG_MODE){printVector(h);}
+                total++;
+            }
+            arcDown(h,k+1);
+        }
     }
-    if(!isIncreasing && h[k-1]<h[k]){
+}
+
+void arcUp(vector<int> h, int k) {
+    ///Parar
+    if(k>=n){
         return;
     }
-  */
-    /// Rule 3
+    /// Rule 3,4
     for(int i=h[k-1]-blockHeight+1 ; i<h[k-1]+blockHeight ; i++){
         /// entre 0 e altura maxima
         if(0<=i and i<=maxHeight-blockHeight){
@@ -71,21 +67,21 @@ void architecture(vector<int> h, int k, bool isIncreasing) {
             if(i != h[k-1]){
                 h.resize(k+1);
                 h[k] = i;
-                //RULE 2 and increment
+                /// Rule 2
                 if(h[k]==0){
                     if(DEBUG_MODE){printVector(h);}
-                    //Rule 4
-                    if(hasOneLocalMaximum(h)){
-                        total++;
-                    }
-                    
+                    total++;
                 }
-                architecture(h,k+1,isIncreasing);
+                if(h[k-1]<h[k]){
+                    arcUp(h,k+1);
+                }else{
+                    arcDown(h,k+1);
+                }
             }
         }
     }
-   
 }
+
 
 int main() {
     ios_base::sync_with_stdio(false);
@@ -103,7 +99,7 @@ int main() {
         if(n>=3){
             vector<int> h;
             h.resize(1);
-            architecture(h,1,true);
+            arcUp(h,1);
         }
         cout << total%1000000007 << endl;
     }
