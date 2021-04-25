@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 
-#define DEBUG_MODE false
+#define DEBUG_MODE true
 
 using namespace std;
 
@@ -67,6 +67,7 @@ void arcUp(vector<int> h, int k) {
             if(i != h[k-1]){
                 h.resize(k+1);
                 h[k] = i;
+                
                 /// Rule 2
                 if(h[k]==0){
                     if(DEBUG_MODE){printVector(h);}
@@ -82,6 +83,31 @@ void arcUp(vector<int> h, int k) {
     }
 }
 
+void architecture(vector<int> h) {
+    for(int k=1;k<n;k++){
+        /// Rule 3,4
+        for(int i=h[k-1]-blockHeight+1 ; i<h[k-1]+blockHeight ; i++){
+            /// entre 0 e altura maxima
+            if(0<=i and i<=maxHeight-blockHeight){
+                /// Rule 1
+                if(i != h[k-1]){
+                    h.resize(k+1);
+                    h[k] = i;
+                    if(DEBUG_MODE){printVector(h);}
+                    /// Rule 2
+                    if(h[k]==0){
+                        total++;
+                    }
+                    if(h[k-1]<h[k]){
+                        continue;
+                    }else{
+                        arcDown(h,k+1);
+                    }
+                }
+            }
+        }
+    }
+}
 
 int main() {
     ios_base::sync_with_stdio(false);
@@ -99,7 +125,23 @@ int main() {
         if(n>=3){
             vector<int> h;
             h.resize(1);
-            arcUp(h,1);
+            //================================================
+            
+            /*
+             * THIS WORKS BUT SLOW BC RECURSIVE
+             */
+            
+            //arcUp(h,1);
+            
+            //================================================
+            
+            /*
+             * THIS DONT WORKS (NOT RECURSIVE)
+             */
+
+            architecture(h);
+            
+            //================================================
         }
         cout << total%1000000007 << endl;
     }
