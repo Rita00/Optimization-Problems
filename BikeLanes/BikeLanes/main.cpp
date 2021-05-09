@@ -4,13 +4,87 @@
 #include <queue>
 #include <list>
 #include <stack>
-
+#include <set>
 
 using namespace std;
+
+vector<int> solution;
+
+map<pair<int, int>, int> edge;
+map<int, int> k_set;
+map<int,int> k_rank;
+
 vector<bool> visited;
-map<pair<int, int>, int> graph;
 map<int, list<int>> outNeighbours, inNeighbours;
 map<int, list<int>> components;
+
+
+
+void make_set(list<int> V){
+    for(auto v : V){
+        k_set[v] = v;
+        k_rank[v] = 0;
+    }
+}
+
+int find_set(int a){
+    if(k_set[a] != a){
+        k_set[a] = find_set(k_set[a]);
+    }
+    return k_set[a];
+}
+
+void link_set(int a, int b){
+    if(k_rank[a] > k_rank[b]){
+        k_set[b] = a;
+    }else{
+        k_set[a] = b;
+    }
+    if(k_rank[a] == k_rank[b]){
+        k_rank[b]++;
+    }
+}
+void union_set(int a, int b){
+    link_set(find_set(a), find_set(b));
+}
+
+
+int Kruskals(list<int> V){
+    int count=0;
+    map<int, vector<pair<int, int>>> ordered_edges_weight;
+    k_rank.clear();
+    k_set.clear();
+    
+    make_set(V);
+    
+    //sort edges in E into nondecreasing order by weight
+    for(auto it=edge.begin(); it!=edge.end();it++){
+        ordered_edges_weight[(*it).second].push_back((*it).first);
+    }
+    for(auto it=ordered_edges_weight.begin(); it!=ordered_edges_weight.end();it++){
+        for (auto const&[u, v] : (*it).second) {
+            if (find_set(u) != find_set(v)){
+                count+=edge[{u,v}];
+                union_set(u,v);
+            }
+        }
+    }
+    return count;
+}
+
+void initKruskals(){
+    int total=0,max=0,current;
+    for(auto c : components){
+        current = Kruskals(c.second);
+        total += current;
+        if(current>max){
+            max=current;
+        }
+    }
+    solution.push_back(max);
+    solution.push_back(total);
+}
+
 
 void Visit(int u, stack<int> &L) {
     list<int>::iterator v;
@@ -92,18 +166,40 @@ int main() {
         outNeighbours.clear();
         inNeighbours.clear();
         components.clear();
-        graph.clear();
+        edge.clear();
+        solution.clear();
         cin >> number_vertices >> number_arcs >> number_questions;
         while (number_arcs--) {
             cin >> origin >> destination >> length;
             origin--;
             destination--;
-            graph[{origin, destination}] = length;
+            edge[{origin, destination}] = length;
             outNeighbours[origin].push_back(destination);
             inNeighbours[destination].push_back(origin);
         }
         Kosaraju(number_vertices);
-        printComponents();
+        solution.push_back((int)components.size());
+        solution.push_back((int)(*components.end()).second.size());
+        switch(number_questions){
+            case 1:
+                cout << solution[0] << endl;
+                break;
+            case 2:
+                cout << solution[0] << " " << solution[1] << endl;
+                break;
+            case 3:
+                initKruskals();
+                cout << solution[0] << " " << solution[1] << " " << solution[2] << endl;
+                break;
+            case 4:
+                initKruskals();
+                cout << solution[0] << " " << solution[1] << " " << solution[2] << " " << solution[3] << endl;
+                break;
+                
+                
+        }
+        
+
     }
     cout << endl;
     return 0;
