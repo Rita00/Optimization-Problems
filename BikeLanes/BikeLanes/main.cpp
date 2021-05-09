@@ -91,6 +91,7 @@ int main() {
     while (number_maps--) {
         outNeighbours.clear();
         inNeighbours.clear();
+        components.clear();
         graph.clear();
         cin >> number_vertices >> number_arcs >> number_questions;
         while (number_arcs--) {
