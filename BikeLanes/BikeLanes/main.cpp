@@ -5,7 +5,6 @@
 #include <queue>
 #include <list>
 #include <stack>
-#include <set>
 #include <algorithm>
 
 using namespace std;
@@ -13,7 +12,6 @@ using namespace std;
 vector<int> solution;
 
 multimap<int, pair<int, int>> edge;
-//map<pair<int, int>, int> edge;
 map<int, int> k_set;
 map<int, int> k_rank;
 
@@ -22,7 +20,7 @@ map<int, list<int>> outNeighbours, inNeighbours;
 map<int, list<int>> components;
 
 
-void make_set(const list<int>& V) {
+void make_set(const list<int> &V) {
     for (auto v : V) {
         k_set[v] = v;
         k_rank[v] = 0;
@@ -51,45 +49,35 @@ void union_set(int a, int b) {
     link_set(find_set(a), find_set(b));
 }
 
-bool sortEdge(const pair<int, int> &a, const pair<int, int> &b) {
-    return (a.second < b.second);
+bool isInList(int v, const list<int> &lista) {
+    for (int i: lista) {
+        if (i == v) return true;
+    }
+    return false;
 }
 
-int Kruskals(const list<int>& V) {
+
+int Kruskals(const list<int> &V) {
     int count = 0;
-    map<int, vector<pair<int, int>>> ordered_edges_weight;
     k_rank.clear();
     k_set.clear();
 
     make_set(V);
 
-    //sort edges in E into nondecreasing order by weight
-//    for (auto &it : edge) {
-//        ordered_edges_weight[it.second].push_back(it.first);
-//    }
-
     for (auto const&[key, val] : edge) {
-        if (find_set(val.first) != find_set(val.second)) {
-            count += key;
-            union_set(val.first, val.second);
+        if (isInList(val.first, V) and isInList(val.second, V)) {
+            if (find_set(val.first) != find_set(val.second)) {
+                count += key;
+                union_set(val.first, val.second);
+            }
         }
     }
-
-//    for (auto &it : ordered_edges_weight) {
-//        for (auto const&[u, v] : it.second) {
-//            if (find_set(u) != find_set(v)) {
-////                count += it.first;
-//                count += edge[{u, v}];
-//                union_set(u, v);
-//            }
-//        }
-//    }
     return count;
 }
 
 void initKruskals() {
     int total = 0, max = 0, current;
-    for (const auto& c : components) {
+    for (const auto &c : components) {
         current = Kruskals(c.second);
         total += current;
         if (current > max) {
@@ -169,13 +157,12 @@ void printComponents() {
 int getMaxComponent() {
     unsigned int max = 0;
     list<int>::iterator v;
-    for (auto & component : components) {
+    for (auto &component : components) {
         unsigned int size = component.second.size();
         if (size > max)
             max = size;
-        
     }
-    return (int)max;
+    return (int) max;
 }
 
 int main() {
@@ -200,14 +187,12 @@ int main() {
             cin >> origin >> destination >> length;
             origin--;
             destination--;
-//            edge[{origin, destination}] = length;
-            edge.insert({length, {destination, origin}});
             edge.insert({length, {origin, destination}});
             outNeighbours[origin].push_back(destination);
             inNeighbours[destination].push_back(origin);
         }
         Kosaraju(number_vertices);
-        
+
         solution.push_back((int) components.size());
         solution.push_back((int) (getMaxComponent()));
         switch (number_questions) {
@@ -230,7 +215,7 @@ int main() {
         }
 
     }
-    cout << endl;
+//    cout << endl;
     return 0;
 }
 
