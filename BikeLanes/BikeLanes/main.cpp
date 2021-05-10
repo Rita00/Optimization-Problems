@@ -12,7 +12,7 @@ using namespace std;
 
 vector<int> solution;
 
-map<int, pair<int, int>> edge;
+multimap<int, pair<int, int>> edge;
 //map<pair<int, int>, int> edge;
 map<int, int> k_set;
 map<int, int> k_rank;
@@ -61,15 +61,12 @@ int Kruskals(const list<int>& V) {
     k_rank.clear();
     k_set.clear();
 
-
     make_set(V);
 
     //sort edges in E into nondecreasing order by weight
 //    for (auto &it : edge) {
 //        ordered_edges_weight[it.second].push_back(it.first);
 //    }
-
-//    sort(edge.begin(), edge.end());
 
     for (auto const&[key, val] : edge) {
         if (find_set(val.first) != find_set(val.second)) {
@@ -204,7 +201,7 @@ int main() {
             origin--;
             destination--;
 //            edge[{origin, destination}] = length;
-            edge[length] = {origin, destination};
+            edge.insert({length, {origin, destination}});
             outNeighbours[origin].push_back(destination);
             inNeighbours[destination].push_back(origin);
         }
