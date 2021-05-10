@@ -69,7 +69,7 @@ int Kruskals(const list<int>& V) {
 //        ordered_edges_weight[it.second].push_back(it.first);
 //    }
 
-    sort(edge.begin(), edge.end());
+//    sort(edge.begin(), edge.end());
 
     for (auto const&[key, val] : edge) {
         if (find_set(val.first) != find_set(val.second)) {
