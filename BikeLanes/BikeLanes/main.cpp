@@ -201,6 +201,7 @@ int main() {
             origin--;
             destination--;
 //            edge[{origin, destination}] = length;
+            edge.insert({length, {destination, origin}});
             edge.insert({length, {origin, destination}});
             outNeighbours[origin].push_back(destination);
             inNeighbours[destination].push_back(origin);
