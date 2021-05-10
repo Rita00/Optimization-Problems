@@ -1,5 +1,6 @@
 #include <iostream>
 #include <map>
+#include <utility>
 #include <vector>
 #include <queue>
 #include <list>
@@ -12,73 +13,73 @@ vector<int> solution;
 
 map<pair<int, int>, int> edge;
 map<int, int> k_set;
-map<int,int> k_rank;
+map<int, int> k_rank;
 
 vector<bool> visited;
 map<int, list<int>> outNeighbours, inNeighbours;
 map<int, list<int>> components;
 
 
-
-void make_set(list<int> V){
-    for(auto v : V){
+void make_set(list<int> V) {
+    for (auto v : V) {
         k_set[v] = v;
         k_rank[v] = 0;
     }
 }
 
-int find_set(int a){
-    if(k_set[a] != a){
+int find_set(int a) {
+    if (k_set[a] != a) {
         k_set[a] = find_set(k_set[a]);
     }
     return k_set[a];
 }
 
-void link_set(int a, int b){
-    if(k_rank[a] > k_rank[b]){
+void link_set(int a, int b) {
+    if (k_rank[a] > k_rank[b]) {
         k_set[b] = a;
-    }else{
+    } else {
         k_set[a] = b;
     }
-    if(k_rank[a] == k_rank[b]){
+    if (k_rank[a] == k_rank[b]) {
         k_rank[b]++;
     }
 }
-void union_set(int a, int b){
+
+void union_set(int a, int b) {
     link_set(find_set(a), find_set(b));
 }
 
 
-int Kruskals(list<int> V){
-    int count=0;
+int Kruskals(list<int> V) {
+    int count = 0;
     map<int, vector<pair<int, int>>> ordered_edges_weight;
     k_rank.clear();
     k_set.clear();
-    
-    make_set(V);
-    
+
+    make_set(std::move(V));
+
     //sort edges in E into nondecreasing order by weight
-    for(auto it=edge.begin(); it!=edge.end();it++){
-        ordered_edges_weight[(*it).second].push_back((*it).first);
+    for (auto &it : edge) {
+        ordered_edges_weight[it.second].push_back(it.first);
     }
-    for(auto it=ordered_edges_weight.begin(); it!=ordered_edges_weight.end();it++){
-        for (auto const&[u, v] : (*it).second) {
-            if (find_set(u) != find_set(v)){
-                count+=edge[{u,v}];
-                union_set(u,v);
+    for (auto &it : ordered_edges_weight) {
+        for (auto const&[u, v] : it.second) {
+            if (find_set(u) != find_set(v)) {
+                count += edge[{u, v}];
+                union_set(u, v);
             }
         }
     }
     return count;
 }
 
-void initKruskals(){
-    int total=0,max=0,current;
-    for(auto c : components){
+void initKruskals() {
+    int total = 0, max = 0, current;
+    for (const auto& c : components) {
         current = Kruskals(c.second);
         total += current;
-        if(current>max){
-            max=current;
+        if (current > max) {
+            max = current;
         }
     }
     solution.push_back(max);
@@ -151,6 +152,18 @@ void printComponents() {
     }
 }
 
+int getMaxComponent() {
+    unsigned int max = 0;
+    list<int>::iterator v;
+    for (auto & component : components) {
+        unsigned int size = component.second.size();
+        if (size > max)
+            max = size;
+        
+    }
+    return (int)max;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -178,9 +191,10 @@ int main() {
             inNeighbours[destination].push_back(origin);
         }
         Kosaraju(number_vertices);
-        solution.push_back((int)components.size());
-        solution.push_back((int)(*components.end()).second.size());
-        switch(number_questions){
+        
+        solution.push_back((int) components.size());
+        solution.push_back((int) (getMaxComponent()));
+        switch (number_questions) {
             case 1:
                 cout << solution[0] << endl;
                 break;
@@ -195,10 +209,9 @@ int main() {
                 initKruskals();
                 cout << solution[0] << " " << solution[1] << " " << solution[2] << " " << solution[3] << endl;
                 break;
-                
-                
+
+
         }
-        
 
     }
     cout << endl;
