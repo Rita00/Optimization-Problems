@@ -6,12 +6,14 @@
 #include <list>
 #include <stack>
 #include <set>
+#include <algorithm>
 
 using namespace std;
 
 vector<int> solution;
 
-map<pair<int, int>, int> edge;
+map<int, pair<int, int>> edge;
+//map<pair<int, int>, int> edge;
 map<int, int> k_set;
 map<int, int> k_rank;
 
@@ -49,6 +51,9 @@ void union_set(int a, int b) {
     link_set(find_set(a), find_set(b));
 }
 
+bool sortEdge(const pair<int, int> &a, const pair<int, int> &b) {
+    return (a.second < b.second);
+}
 
 int Kruskals(const list<int>& V) {
     int count = 0;
@@ -56,20 +61,32 @@ int Kruskals(const list<int>& V) {
     k_rank.clear();
     k_set.clear();
 
+
     make_set(V);
 
     //sort edges in E into nondecreasing order by weight
-    for (auto &it : edge) {
-        ordered_edges_weight[it.second].push_back(it.first);
-    }
-    for (auto &it : ordered_edges_weight) {
-        for (auto const&[u, v] : it.second) {
-            if (find_set(u) != find_set(v)) {
-                count += edge[{u, v}];
-                union_set(u, v);
-            }
+//    for (auto &it : edge) {
+//        ordered_edges_weight[it.second].push_back(it.first);
+//    }
+
+    sort(edge.begin(), edge.end());
+
+    for (auto const&[key, val] : edge) {
+        if (find_set(val.first) != find_set(val.second)) {
+            count += key;
+            union_set(val.first, val.second);
         }
     }
+
+//    for (auto &it : ordered_edges_weight) {
+//        for (auto const&[u, v] : it.second) {
+//            if (find_set(u) != find_set(v)) {
+////                count += it.first;
+//                count += edge[{u, v}];
+//                union_set(u, v);
+//            }
+//        }
+//    }
     return count;
 }
 
@@ -186,7 +203,8 @@ int main() {
             cin >> origin >> destination >> length;
             origin--;
             destination--;
-            edge[{origin, destination}] = length;
+//            edge[{origin, destination}] = length;
+            edge[length] = {origin, destination};
             outNeighbours[origin].push_back(destination);
             inNeighbours[destination].push_back(origin);
         }
