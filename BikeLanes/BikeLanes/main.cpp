@@ -20,7 +20,7 @@ map<int, list<int>> outNeighbours, inNeighbours;
 map<int, list<int>> components;
 
 
-void make_set(list<int> V) {
+void make_set(const list<int>& V) {
     for (auto v : V) {
         k_set[v] = v;
         k_rank[v] = 0;
@@ -50,13 +50,13 @@ void union_set(int a, int b) {
 }
 
 
-int Kruskals(list<int> V) {
+int Kruskals(const list<int>& V) {
     int count = 0;
     map<int, vector<pair<int, int>>> ordered_edges_weight;
     k_rank.clear();
     k_set.clear();
 
-    make_set(std::move(V));
+    make_set(V);
 
     //sort edges in E into nondecreasing order by weight
     for (auto &it : edge) {
