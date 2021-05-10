@@ -1,3 +1,8 @@
+/**
+ * @author Ana Rita Rodrigues -  2018284515
+ * @author Dylan Gonçalves Perdigão - 2018233092
+ */
+
 #include <iostream>
 #include <map>
 #include <utility>
@@ -144,16 +149,6 @@ void Kosaraju(int numV) {
     removeSingleComp();
 }
 
-void printComponents() {
-    cout << "\n\n=======================" << endl;
-    for (auto const&[key, val] : components) {
-        cout << key;
-        for (int i : val) {
-            cout << "\t" << i << endl;
-        }
-    }
-}
-
 int getMaxComponent() {
     unsigned int max = 0;
     list<int>::iterator v;
@@ -215,69 +210,5 @@ int main() {
         }
 
     }
-//    cout << endl;
     return 0;
 }
-
-/*
-Example Input
-=================
-6
-12 18 4
-2 1 3
-3 2 4
-4 1 2
-4 2 8
-2 5 3
-5 2 5
-3 6 4
-6 3 2
-6 5 6
-7 5 4
-8 6 9
-7 8 1
-7 9 2
-9 10 8
-10 7 4
-8 11 2
-11 12 12
-12 10 3
-4 4 3
-2 1 3
-3 2 4
-4 1 2
-4 2 8
-4 4 4
-2 1 3
-3 2 4
-1 4 2
-4 2 8
-4 4 3
-2 1 3
-3 2 4
-1 4 2
-4 2 8
-4 4 2
-2 1 3
-3 2 4
-1 4 2
-4 2 8
-4 4 1
-2 1 3
-3 2 4
-1 4 2
-4 2 8
-
-
-
-Example output
-=================
-3 6 12 17
-0 0 0
-1 3 5 5
-1 3 5
-1 3
-1
-
- 
-*/
